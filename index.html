@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه شخصی من</title>
+    <style>
+        /* ===== تنظیمات کلی ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ===== کارت اصلی ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* ===== عکس پروفایل ===== */
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            user-select: none;
+        }
+
+        /* ===== عنوان و توضیحات ===== */
+        h1 {
+            font-size: 32px;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #718096;
+            margin-bottom: 25px;
+        }
+
+        .bio {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        /* ===== دکمه‌های شبکه‌های اجتماعی ===== */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-github {
+            background: #24292e;
+        }
+        .btn-github:hover {
+            background: #1a1e22;
+        }
+
+        .btn-telegram {
+            background: #0088cc;
+        }
+        .btn-telegram:hover {
+            background: #0077b3;
+        }
+
+        .btn-linkedin {
+            background: #0a66c2;
+        }
+        .btn-linkedin:hover {
+            background: #0957a8;
+        }
+
+        .btn-email {
+            background: #ea4335;
+        }
+        .btn-email:hover {
+            background: #d33426;
+        }
+
+        /* ===== خط جداکننده ===== */
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 0 auto 25px;
+            border-radius: 10px;
+        }
+
+        /* ===== فوتر ===== */
+        .footer {
+            font-size: 14px;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
+
+        .footer span {
+            color: #e53e3e;
+        }
+
+        /* ===== واکنش‌گرا (Responsive) ===== */
+        @media (max-width: 480px) {
+            .card {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .profile-img {
+                width: 120px;
+                height: 120px;
+                font-size: 55px;
+            }
+
+            .social-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+                width: 100%;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+
+        <!-- عکس پروفایل (اموجی به جای عکس) -->
+        <div class="profile-img">👨‍💻</div>
+
+        <!-- عنوان -->
+        <h1>سلام، من [نام شما] هستم!</h1>
+        <p class="subtitle">توسعه‌دهنده وب | عاشق کدنویسی</p>
+
+        <div class="divider"></div>
+
+        <!-- توضیحات -->
+        <p class="bio">
+            به سایت خوش آمدید! این صفحه با ❤️ ساخته شده و روی 
+            <strong>GitHub Pages</strong> میزبانی می‌شود.
+            <br>
+            من عاشق ساختن محصولات کاربردی و زیبا هستم.
+        </p>
+
+        <!-- دکمه‌های شبکه‌های اجتماعی -->
+        <div class="social-links">
+            <a href="#" class="social-btn btn-github">🐙 گیت‌هاب</a>
+            <a href="#" class="social-btn btn-telegram">✈️ تلگرام</a>
+            <a href="#" class="social-btn btn-linkedin">💼 لینکدین</a>
+            <a href="#" class="social-btn btn-email">📧 ایمیل</a>
+        </div>
+
+        <!-- فوتر -->
+        <div class="footer">
+            ساخته شده با <span>❤️</span> در سال ۲۰۲۶
+        </div>
+
+    </div>
+
+</body>
+</html>
