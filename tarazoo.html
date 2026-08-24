@@ -1,1487 +1,536 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ترازوی ریاضی - آموزش ریاضی برای کودکان</title>
-    <style>
-        :root {
-            --wood-light: #DEB887;
-            --wood-medium: #D2B48C;
-            --wood-dark: #C19A6B;
-            --wood-darker: #A0522D;
-            --wood-pale: #F5E6D3;
-            --beam-brown: #C8A16F;
-            --beam-brown-dark: #B8956A;
-            --metal: #888;
-            --metal-dark: #666;
-            --bg-start: #FFF8F0;
-            --bg-end: #F0E6D8;
-            --text-dark: #3E2723;
-            --text-medium: #5D4037;
-            --card-bg: #FFFDF8;
-            --shadow: rgba(62, 39, 35, 0.2);
-            --weight-1: #4ECDC4;
-            --weight-2: #45B7D1;
-            --weight-3: #F9CA24;
-            --weight-4: #FF9F43;
-            --weight-5: #FF6B6B;
-            --weight-1-dark: #2FA8A0;
-            --weight-2-dark: #2D8FA8;
-            --weight-3-dark: #D4A810;
-            --weight-4-dark: #D9802A;
-            --weight-5-dark: #D95050;
-            --success-green: #4CAF50;
-            --warning-orange: #FF9800;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ترازوی جادویی | آموزش ریاضی کودکان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{direction:rtl}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;
+  background:linear-gradient(180deg,#8FD0F2 0%,#C9ECFB 55%,#E4F6E6 100%);
+  min-height:100vh;overflow-x:hidden;user-select:none;-webkit-user-select:none;
+}
+/* ---------- آسمان زنده ---------- */
+.sun{position:fixed;top:-55px;left:-55px;width:200px;height:200px;z-index:0;pointer-events:none}
+.sun::before{content:'';position:absolute;inset:-34px;border-radius:50%;
+  background:repeating-conic-gradient(rgba(255,214,80,.35) 0 7deg,transparent 7deg 20deg);
+  animation:spin 46s linear infinite}
+.sun::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,#FFF3B0,#FFD93B 62%,#FFC300)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cloud{position:fixed;background:#fff;border-radius:60px;z-index:0;opacity:.92;pointer-events:none;
+  box-shadow:0 6px 14px rgba(120,160,190,.18);animation:drift linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:55%;height:170%;top:-80%;right:12%}
+.cloud::after{width:42%;height:120%;top:-48%;left:10%}
+.c1{width:150px;height:46px;top:9%;animation-duration:75s;animation-delay:-20s}
+.c2{width:110px;height:34px;top:22%;animation-duration:95s;animation-delay:-60s;opacity:.8}
+.c3{width:190px;height:56px;top:4%;animation-duration:120s;animation-delay:-90s;opacity:.85}
+@keyframes drift{from{transform:translateX(-260px)}to{transform:translateX(115vw)}}
+.fspan{position:fixed;font-family:'Lalezar';color:rgba(255,255,255,.7);z-index:0;pointer-events:none;
+  text-shadow:0 2px 0 rgba(120,160,190,.25);animation:bob 6s ease-in-out infinite}
+.f1{top:16%;right:6%;font-size:3.4rem}.f2{top:40%;left:5%;font-size:2.6rem;animation-delay:-2s}
+.f3{top:60%;right:10%;font-size:2.2rem;animation-delay:-4s}.f4{top:12%;left:22%;font-size:2rem;animation-delay:-1s}
+@keyframes bob{50%{transform:translateY(-16px) rotate(6deg)}}
+.grass{position:fixed;left:-5%;bottom:0;width:110%;height:96px;z-index:0;
+  background:linear-gradient(#85CE74,#57A44B);border-radius:50% 50% 0 0/70px 70px 0 0}
+.grass::after{content:'';position:absolute;inset:auto 0 0 0;height:26px;background:rgba(40,90,35,.25)}
+@keyframes bob2{50%{transform:translateY(-4px)}}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ---------- چیدمان ---------- */
+main{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 12px 60px}
+header{text-align:center;padding:24px 10px 4px}
+h1{font-family:'Lalezar';font-weight:400;font-size:clamp(2.3rem,6.5vw,4rem);color:#6B4423;
+  text-shadow:0 3px 0 #fff,0 7px 0 rgba(91,58,30,.14)}
+.tilt{display:inline-block;animation:wig 2.4s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+.tag{color:#2E5F7E;font-weight:600;margin-top:2px;font-size:clamp(.95rem,2.5vw,1.15rem)}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, 'Vazirmatn', 'Iranian Sans', sans-serif;
-            background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-end) 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            direction: rtl;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:14px 0 6px}
+.btn{font-family:'Lalezar';font-size:1.15rem;padding:.5rem 1.25rem;border:none;border-radius:14px;
+  color:#fff;cursor:pointer;box-shadow:0 5px 0 var(--bd);transition:.15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--bd)}
+.b-purple{--bd:#6C33B0;background:#9B5DE5}
+.b-red{--bd:#B92E35;background:#F2545B}
+.b-blue{--bd:#2E7FB8;background:#57B7EC}
+.b-green{--bd:#3E8B36;background:#67C25C}
+.stars{font-family:'Lalezar';font-size:1.25rem;background:#FFF3C4;border:3px solid #FFC93B;
+  border-radius:14px;padding:.35rem 1rem;color:#8a5a00}
 
-        .container {
-            max-width: 820px;
-            width: 100%;
-            background: var(--card-bg);
-            border-radius: 28px;
-            padding: 24px 20px 28px;
-            box-shadow: 0 15px 45px var(--shadow), 0 4px 12px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            border: 3px solid var(--wood-pale);
-            transition: all 0.3s ease;
-        }
+/* ---------- صحنه ترازو ---------- */
+.stage{position:relative;max-width:980px;margin:0 auto}
+#scale{width:100%;height:auto;display:block;touch-action:none}
+#hooks text{font-family:'Lalezar';font-size:16px;fill:#5B3A1E;text-anchor:middle;dominant-baseline:central}
+.ring{fill:rgba(255,235,130,0);stroke:#FFC93B;stroke-width:3.5;opacity:0;pointer-events:none;transition:opacity .2s}
+body.selecting .ring,body.dragging .ring{opacity:.95;animation:pulse 1s infinite;pointer-events:all;cursor:pointer}
+.ring.hot{stroke:#FF5D3B;stroke-width:5.5;fill:rgba(255,255,255,.4)}
+@keyframes pulse{50%{stroke-width:6}}
+.w{cursor:grab}
+.w:hover{filter:brightness(1.09)}
+#lamp{fill:#E2C193;stroke:#8C6239;stroke-width:2.5;transition:.3s}
+#scale.balanced #lamp{fill:#4ADE80;filter:drop-shadow(0 0 7px #4ADE80)}
+#scale.balanced #beamRect{filter:drop-shadow(0 0 9px rgba(110,230,140,.95))}
 
-        .container.balanced-celebrate {
-            border-color: var(--success-green);
-            box-shadow: 0 15px 45px rgba(76, 175, 80, 0.35), 0 0 40px rgba(76, 175, 80, 0.2);
-        }
+/* ---------- جغد ---------- */
+.owl{position:absolute;top:0;right:2px;display:flex;align-items:flex-start;gap:6px;z-index:5;max-width:300px}
+.owl-face{font-size:46px;line-height:1;animation:bob2 2.6s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(0,0,0,.2))}
+.bubble{background:#fff;border:3px solid #8C6239;border-radius:16px;padding:8px 12px;font-weight:700;
+  color:#5B3A1E;font-size:.93rem;box-shadow:0 4px 0 rgba(90,60,30,.18);position:relative;margin-top:8px}
+.bubble::after{content:'';position:absolute;top:12px;right:-12px;border:6px solid transparent;border-left:8px solid #8C6239}
+.bubble.pop{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.7)}}
 
-        .container.unbalanced-shake {
-            animation: gentleShake 0.4s ease;
-        }
+/* ---------- تابلوی محاسبه ---------- */
+.board{max-width:880px;margin:4px auto 18px;background:#FFFDF2;border:3px solid #E4C68F;
+  border-radius:18px;padding:14px 16px;box-shadow:0 6px 0 rgba(140,98,57,.22)}
+.sides{display:flex;align-items:stretch;gap:12px;justify-content:center}
+.side{flex:1;max-width:310px;border-radius:14px;padding:10px 12px;text-align:center}
+.side.left{background:#EAF4FD;border:2.5px dashed #57A7E0}
+.side.right{background:#FDF1E1;border:2.5px dashed #F2994A}
+.side h3{font-family:'Lalezar';font-weight:400;color:#4A3B28;font-size:1.15rem}
+.terms{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:32px;margin:4px 0}
+.chip{font-weight:800;padding:2px 10px;border-radius:999px;background:#fff;border:2px solid currentColor;font-size:.95rem}
+.side.left .chip{color:#2E7FB8}.side.right .chip{color:#C56A0E}
+.empty{color:#B49B77;font-size:.85rem;align-self:center}
+.total{font-weight:800;color:#4A3B28}
+.total b{font-family:'Lalezar';font-size:1.35rem}
+.vs{display:flex;align-items:center}
+#sign{font-family:'Lalezar';font-size:2.8rem;color:#B49B77;transition:.2s}
+#sign.eq{color:#2E9E5B;transform:scale(1.15)}
+.status{text-align:center;font-weight:800;margin-top:10px;font-size:1.05rem}
+.status.ok{color:#1F8A4C}.status.warn{color:#C7512E}.status.neutral{color:#7A5C33}
 
-        @keyframes gentleShake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-5px);
-            }
-            40% {
-                transform: translateX(5px);
-            }
-            60% {
-                transform: translateX(-3px);
-            }
-            80% {
-                transform: translateX(3px);
-            }
-        }
+/* ---------- قفسه وزنه‌ها ---------- */
+.shelf{max-width:880px;margin:0 auto}
+.tray-hint{text-align:center;color:#4A3B28;font-weight:700;margin-bottom:8px;font-size:.95rem}
+.tray{background:linear-gradient(#DCAC70,#C08A4F);border:3px solid #8C6239;border-radius:20px;
+  padding:16px 18px 10px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;
+  box-shadow:0 8px 0 #7A5230,inset 0 3px 0 rgba(255,255,255,.35)}
+.tray-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:grab;touch-action:none;
+  transition:transform .15s,box-shadow .15s,background .15s;padding:4px 8px;border-radius:12px;
+  filter:drop-shadow(0 4px 3px rgba(0,0,0,.25));-webkit-touch-callout:none}
+.tray-item:hover{transform:translateY(-6px) scale(1.06)}
+.tray-item.sel{transform:translateY(-7px) scale(1.09);background:rgba(255,255,255,.45);
+  box-shadow:0 0 0 3px #FFD93B,0 6px 10px rgba(0,0,0,.2)}
+.tray-item svg{height:60px;width:auto;pointer-events:none}
+.tray-item span{font-size:.8rem;color:#4A2F14;font-weight:800}
 
-        h1 {
-            font-size: 2.1rem;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+/* ---------- شبح کشیدن، بنر، جشن ---------- */
+.ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-60%);
+  filter:drop-shadow(0 12px 9px rgba(0,0,0,.3))}
+.ghost svg{height:76px;width:auto;display:block}
+#banner{position:fixed;top:34%;left:50%;transform:translate(-50%,-50%) scale(.5);z-index:80;
+  background:#FFD93B;border:4px solid #fff;outline:4px solid #FFB03B;color:#5B3A1E;
+  padding:14px 34px;border-radius:22px;font-family:'Lalezar';font-size:clamp(1.4rem,4.5vw,2.4rem);
+  opacity:0;pointer-events:none;transition:.3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+#banner.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.confetti{position:fixed;top:-24px;z-index:60;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
-        .subtitle {
-            font-size: 1rem;
-            color: var(--text-medium);
-            margin-bottom: 16px;
-            font-weight: 500;
-            line-height: 1.6;
-        }
+/* ---------- راهنما ---------- */
+.overlay{position:fixed;inset:0;background:rgba(30,50,70,.45);z-index:90;display:flex;
+  align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.25s;padding:16px}
+.overlay.open{opacity:1;pointer-events:all}
+.help-card{background:#FFFDF2;border:4px solid #E4C68F;border-radius:20px;max-width:540px;width:100%;
+  padding:22px 24px;transform:translateY(18px);transition:.25s;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.overlay.open .help-card{transform:none}
+.help-card h2{font-family:'Lalezar';font-weight:400;color:#6B4423;font-size:1.8rem;margin-bottom:10px}
+.help-card li{margin:10px 14px 10px 0;font-weight:600;color:#4A3B28;line-height:1.9}
+.help-card .ex{background:#EAF4FD;border:2.5px dashed #57A7E0;border-radius:12px;padding:10px 14px;
+  margin-top:12px;font-weight:800;color:#2E5F7E}
+#btnClose{margin-top:16px}
 
-        .subtitle .hint-icon {
-            display: inline-block;
-            animation: bounceHint 1.5s infinite;
-        }
-
-        @keyframes bounceHint {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-4px);
-            }
-        }
-
-        /* ============= SCALE AREA ============= */
-        .scale-area {
-            position: relative;
-            width: 100%;
-            max-width: 720px;
-            height: 480px;
-            margin: 0 auto 6px;
-            background: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            overflow: visible;
-            cursor: default;
-        }
-
-        /* --- Beam Wrapper (centering + rotation) --- */
-        .beam-wrapper {
-            position: absolute;
-            top: 175px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-        }
-
-        /* --- The Beam --- */
-        .beam {
-            position: relative;
-            width: 620px;
-            height: 44px;
-            background: linear-gradient(180deg, #E8D5B5 0%, var(--beam-brown) 35%, var(--beam-brown-dark) 70%, #B08850 100%);
-            border-radius: 12px;
-            box-shadow:
-                0 4px 14px rgba(0, 0, 0, 0.22),
-                inset 0 2px 4px rgba(255, 255, 255, 0.5),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.15);
-            transform-origin: center center;
-            transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.7, 1);
-            border: 2px solid rgba(160, 110, 60, 0.6);
-            will-change: transform;
-        }
-
-        /* Decorative lines on beam */
-        .beam::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            right: 12px;
-            height: 2px;
-            background: rgba(160, 110, 60, 0.35);
-            border-radius: 2px;
-        }
-        .beam::after {
-            content: '';
-            position: absolute;
-            bottom: 8px;
-            left: 12px;
-            right: 12px;
-            height: 2px;
-            background: rgba(160, 110, 60, 0.25);
-            border-radius: 2px;
-        }
-
-        /* --- Distance Labels on Beam --- */
-        .dist-label {
-            position: absolute;
-            top: -22px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-medium);
-            background: rgba(255, 253, 248, 0.9);
-            padding: 2px 7px;
-            border-radius: 10px;
-            border: 1.5px solid rgba(160, 110, 60, 0.4);
-            pointer-events: none;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-            z-index: 3;
-        }
-
-        /* --- Hooks --- */
-        .hook {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            top: 34px;
-            left: calc(50% - 8px);
-            cursor: pointer;
-            z-index: 2;
-            transition: all 0.2s ease;
-        }
-
-        .hook-ring {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 40% 35%, #ddd, #999 60%, #666);
-            border: 2px solid #555;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5);
-            transition: all 0.25s ease;
-        }
-
-        .hook:hover .hook-ring {
-            box-shadow: 0 0 0 4px rgba(255, 200, 100, 0.6), 0 2px 8px rgba(0, 0, 0, 0.35);
-            transform: scale(1.15);
-        }
-
-        .hook:active .hook-ring {
-            transform: scale(0.95);
-        }
-
-        .hook.highlight {
-            z-index: 10;
-        }
-        .hook.highlight .hook-ring {
-            box-shadow: 0 0 0 6px rgba(255, 215, 100, 0.8), 0 0 20px rgba(255, 180, 50, 0.7);
-            animation: pulseRing 1s infinite;
-            transform: scale(1.2);
-        }
-
-        @keyframes pulseRing {
-            0%,
-            100% {
-                box-shadow: 0 0 0 5px rgba(255, 215, 100, 0.7), 0 0 18px rgba(255, 180, 50, 0.6);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(255, 215, 100, 0.4), 0 0 25px rgba(255, 180, 50, 0.4);
-            }
-        }
-
-        /* --- Weight Stack --- */
-        .weight-stack {
-            position: absolute;
-            top: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            transform-origin: top center;
-            transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.7, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-            will-change: transform;
-        }
-
-        /* --- Individual Weight Item --- */
-        .weight-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: auto;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            animation: weightDropIn 0.4s cubic-bezier(0.34, 1.5, 0.7, 1) forwards;
-            position: relative;
-        }
-
-        .weight-item.removing {
-            animation: weightDropOut 0.3s ease forwards;
-        }
-
-        @keyframes weightDropIn {
-            from {
-                transform: translateY(-25px) scale(0.6);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes weightDropOut {
-            from {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(22px) scale(0.5);
-                opacity: 0;
-            }
-        }
-
-        .weight-string {
-            width: 3px;
-            height: 7px;
-            background: linear-gradient(180deg, #777, #999);
-            border-radius: 2px;
-        }
-
-        .weight-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-            border: 2.5px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), inset 0 -2px 4px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.35);
-            transition: all 0.25s ease;
-            letter-spacing: -0.5px;
-        }
-
-        .weight-item:hover .weight-circle {
-            transform: scale(1.12);
-            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.35);
-        }
-
-        .weight-item:hover .weight-string {
-            background: linear-gradient(180deg, #aa4444, #cc6666);
-        }
-
-        .weight-circle.w1 {
-            background: linear-gradient(135deg, #6EDDD6, var(--weight-1));
-        }
-        .weight-circle.w2 {
-            background: linear-gradient(135deg, #6BC5E0, var(--weight-2));
-        }
-        .weight-circle.w3 {
-            background: linear-gradient(135deg, #FDE45A, var(--weight-3));
-            color: #5D4037;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-        }
-        .weight-circle.w4 {
-            background: linear-gradient(135deg, #FFB85C, var(--weight-4));
-        }
-        .weight-circle.w5 {
-            background: linear-gradient(135deg, #FF8A8A, var(--weight-5));
-        }
-
-        /* --- Fulcrum --- */
-        .fulcrum {
-            position: absolute;
-            top: 217px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 32px solid transparent;
-            border-right: 32px solid transparent;
-            border-bottom: 58px solid var(--wood-darker);
-            z-index: 4;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
-            transition: all 0.3s ease;
-        }
-
-        .fulcrum::after {
-            content: '';
-            position: absolute;
-            top: 22px;
-            left: -14px;
-            width: 28px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-        }
-
-        /* --- Support Column --- */
-        .support-column {
-            position: absolute;
-            top: 275px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 26px;
-            height: 145px;
-            background: linear-gradient(90deg, #B8956A 0%, var(--wood-dark) 40%, var(--wood-darker) 70%, #8B5E3C 100%);
-            border-radius: 6px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), inset 2px 0 3px rgba(255, 255, 255, 0.2);
-            z-index: 3;
-            border: 1px solid rgba(160, 110, 60, 0.5);
-        }
-
-        /* --- Base --- */
-        .base {
-            position: absolute;
-            top: 415px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 220px;
-            height: 28px;
-            background: linear-gradient(180deg, #D2B48C 0%, var(--wood-medium) 40%, #B8956A 80%);
-            border-radius: 10px 10px 20px 20px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.15);
-            z-index: 2;
-            border: 2px solid rgba(160, 110, 60, 0.5);
-        }
-
-        /* --- Ground shadow --- */
-        .ground-shadow {
-            position: absolute;
-            top: 448px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: 20px;
-            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.18) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        /* ============= MOMENT INDICATORS ============= */
-        .moments-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin: 4px 0 10px;
-            padding: 0 10px;
-            flex-wrap: wrap;
-        }
-
-        .moment-card {
-            background: linear-gradient(135deg, #FFF8F0, #FFFDF8);
-            border-radius: 14px;
-            padding: 8px 16px;
-            border: 2px solid var(--wood-pale);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-medium);
-            transition: all 0.4s ease;
-            min-width: 130px;
-            justify-content: center;
-        }
-
-        .moment-card.left-card {
-            border-right: 4px solid var(--weight-2);
-        }
-        .moment-card.right-card {
-            border-left: 4px solid var(--weight-5);
-        }
-
-        .moment-card .moment-value {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            transition: all 0.3s ease;
-            min-width: 32px;
-            text-align: center;
-        }
-        .moment-card .moment-value.left-val {
-            color: var(--weight-2-dark);
-        }
-        .moment-card .moment-value.right-val {
-            color: var(--weight-5-dark);
-        }
-
-        .moment-card .moment-icon {
-            font-size: 1.2rem;
-        }
-
-        .balance-indicator {
-            background: #FFF8E1;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            border: 2.5px solid #E0C068;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-            transition: all 0.5s cubic-bezier(0.34, 1.5, 0.7, 1);
-        }
-        .balance-indicator.balanced {
-            background: #E8F5E9;
-            border-color: var(--success-green);
-            animation: celebrateBalanced 0.6s ease;
-            box-shadow: 0 0 25px rgba(76, 175, 80, 0.5);
-        }
-
-        @keyframes celebrateBalanced {
-            0% {
-                transform: scale(1);
-            }
-            30% {
-                transform: scale(1.35) rotate(-5deg);
-            }
-            60% {
-                transform: scale(0.9) rotate(5deg);
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
-        }
-
-        /* ============= STATUS MESSAGE ============= */
-        .status-box {
-            background: linear-gradient(135deg, #FFFDF8, #FFF8F0);
-            border-radius: 16px;
-            padding: 10px 16px;
-            margin: 6px auto 12px;
-            max-width: 500px;
-            border: 2px dashed var(--wood-pale);
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-medium);
-            transition: all 0.4s ease;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            line-height: 1.5;
-        }
-        .status-box.success {
-            border-color: var(--success-green);
-            background: #F0FFF4;
-            color: #2E7D32;
-            border-style: solid;
-            font-weight: 700;
-        }
-        .status-box.warning {
-            border-color: var(--warning-orange);
-            background: #FFF8E1;
-            color: #E65100;
-            border-style: solid;
-        }
-
-        /* ============= WEIGHTS PALETTE ============= */
-        .palette-section {
-            margin-top: 8px;
-        }
-
-        .palette-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-medium);
-            margin-bottom: 10px;
-            letter-spacing: 0.3px;
-        }
-
-        .weights-palette {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            padding: 4px 0;
-        }
-
-        .palette-weight {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            cursor: pointer;
-            padding: 8px 6px;
-            border-radius: 16px;
-            border: 3px solid transparent;
-            transition: all 0.3s cubic-bezier(0.34, 1.3, 0.7, 1);
-            background: transparent;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            font-family: inherit;
-        }
-        .palette-weight:hover {
-            transform: translateY(-4px);
-            border-color: rgba(160, 110, 60, 0.35);
-            background: rgba(255, 253, 248, 0.7);
-        }
-        .palette-weight:active {
-            transform: translateY(0) scale(0.95);
-        }
-
-        .palette-weight.selected {
-            border-color: var(--wood-darker);
-            background: rgba(255, 240, 200, 0.6);
-            box-shadow: 0 0 20px rgba(255, 180, 50, 0.5);
-            transform: translateY(-6px) scale(1.05);
-            animation: selectedPulse 1.2s infinite;
-        }
-
-        @keyframes selectedPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 18px rgba(255, 180, 50, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 32px rgba(255, 180, 50, 0.7);
-            }
-        }
-
-        .palette-weight .palette-circle {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-            border: 3px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22), inset 0 -2px 4px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.35);
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-        .palette-weight:hover .palette-circle {
-            transform: scale(1.08);
-        }
-        .palette-weight.selected .palette-circle {
-            transform: scale(1.15);
-        }
-
-        .palette-weight .palette-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-medium);
-            pointer-events: none;
-            letter-spacing: 0.3px;
-        }
-
-        /* ============= CONTROLS ============= */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 22px;
-            border-radius: 28px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.3, 0.7, 1);
-            font-family: inherit;
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-        }
-        .btn:active {
-            transform: translateY(0) scale(0.96);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-        .btn-reset {
-            background: linear-gradient(135deg, #FF8A80, #FF5252);
-            color: #fff;
-        }
-        .btn-reset:hover {
-            background: linear-gradient(135deg, #FF6E60, #E53935);
-        }
-        .btn-hint {
-            background: linear-gradient(135deg, #81D4FA, #29B6F6);
-            color: #fff;
-        }
-        .btn-hint:hover {
-            background: linear-gradient(135deg, #4FC3F7, #0288D1);
-        }
-
-        /* ============= EQUATION DISPLAY ============= */
-        .equation-display {
-            background: rgba(255, 253, 248, 0.8);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-top: 8px;
-            font-size: 0.82rem;
-            color: var(--text-medium);
-            font-weight: 500;
-            line-height: 1.6;
-            min-height: 20px;
-            border: 1.5px solid rgba(160, 110, 60, 0.25);
-            letter-spacing: 0.2px;
-            direction: ltr;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            transition: all 0.3s ease;
-        }
-        .equation-display .eq-equal {
-            color: var(--success-green);
-            font-weight: 800;
-        }
-
-        /* ============= RESPONSIVE ============= */
-        @media (max-width: 760px) {
-            .container {
-                padding: 16px 12px 20px;
-                border-radius: 20px;
-            }
-            h1 {
-                font-size: 1.6rem;
-            }
-            .subtitle {
-                font-size: 0.85rem;
-            }
-            .beam {
-                width: 460px;
-                height: 36px;
-            }
-            .scale-area {
-                height: 370px;
-                max-width: 520px;
-            }
-            .beam-wrapper {
-                top: 130px;
-            }
-            .fulcrum {
-                top: 164px;
-                border-left-width: 24px;
-                border-right-width: 24px;
-                border-bottom-width: 44px;
-            }
-            .support-column {
-                top: 208px;
-                height: 105px;
-                width: 20px;
-            }
-            .base {
-                top: 310px;
-                width: 160px;
-                height: 22px;
-            }
-            .ground-shadow {
-                top: 335px;
-                width: 200px;
-            }
-            .hook {
-                top: 28px;
-                width: 12px;
-                height: 12px;
-            }
-            .hook-ring {
-                width: 12px;
-                height: 12px;
-                border-width: 1.5px;
-            }
-            .weight-stack {
-                top: 14px;
-            }
-            .weight-circle {
-                width: 26px;
-                height: 26px;
-                font-size: 0.78rem;
-                border-width: 2px;
-            }
-            .weight-string {
-                height: 5px;
-                width: 2px;
-            }
-            .dist-label {
-                font-size: 0.6rem;
-                top: -18px;
-                padding: 1px 5px;
-            }
-            .moments-row {
-                gap: 6px;
-                padding: 0 4px;
-            }
-            .moment-card {
-                padding: 5px 10px;
-                font-size: 0.75rem;
-                min-width: 90px;
-                border-radius: 10px;
-            }
-            .moment-card .moment-value {
-                font-size: 0.95rem;
-            }
-            .balance-indicator {
-                width: 38px;
-                height: 38px;
-                font-size: 1.2rem;
-            }
-            .palette-weight .palette-circle {
-                width: 34px;
-                height: 34px;
-                font-size: 0.95rem;
-            }
-            .weights-palette {
-                gap: 8px;
-            }
-            .status-box {
-                font-size: 0.85rem;
-                padding: 8px 12px;
-                min-height: 36px;
-            }
-            .btn {
-                padding: 8px 16px;
-                font-size: 0.82rem;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .beam {
-                width: 340px;
-                height: 30px;
-                border-radius: 8px;
-            }
-            .scale-area {
-                height: 300px;
-                max-width: 380px;
-            }
-            .beam-wrapper {
-                top: 100px;
-            }
-            .fulcrum {
-                top: 128px;
-                border-left-width: 18px;
-                border-right-width: 18px;
-                border-bottom-width: 34px;
-            }
-            .support-column {
-                top: 162px;
-                height: 75px;
-                width: 16px;
-            }
-            .base {
-                top: 235px;
-                width: 120px;
-                height: 18px;
-                border-radius: 6px;
-            }
-            .ground-shadow {
-                top: 255px;
-                width: 150px;
-            }
-            .hook {
-                top: 24px;
-                width: 10px;
-                height: 10px;
-            }
-            .hook-ring {
-                width: 10px;
-                height: 10px;
-                border-width: 1px;
-            }
-            .weight-stack {
-                top: 12px;
-            }
-            .weight-circle {
-                width: 22px;
-                height: 22px;
-                font-size: 0.65rem;
-                border-width: 1.5px;
-            }
-            .weight-string {
-                height: 4px;
-                width: 2px;
-            }
-            .dist-label {
-                font-size: 0.52rem;
-                top: -15px;
-                padding: 1px 3px;
-            }
-            .moments-row {
-                flex-direction: column;
-                gap: 4px;
-                align-items: center;
-            }
-            .moment-card {
-                min-width: 120px;
-            }
-            .balance-indicator {
-                width: 32px;
-                height: 32px;
-                font-size: 1rem;
-            }
-            .weights-palette {
-                gap: 5px;
-            }
-            .palette-weight {
-                padding: 4px 3px;
-            }
-            .palette-weight .palette-circle {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
-                border-width: 2px;
-            }
-            .palette-weight .palette-label {
-                font-size: 0.6rem;
-            }
-            .status-box {
-                font-size: 0.75rem;
-                padding: 6px 8px;
-            }
-            .equation-display {
-                font-size: 0.7rem;
-                padding: 5px 8px;
-            }
-            h1 {
-                font-size: 1.3rem;
-            }
-            .btn {
-                padding: 6px 12px;
-                font-size: 0.7rem;
-                border-radius: 20px;
-            }
-        }
-    </style>
+@media (max-width:760px){
+  .sides{flex-wrap:wrap}.vs{width:100%;justify-content:center}
+  .owl{max-width:200px}.bubble{font-size:.78rem}.owl-face{font-size:34px}
+  .fspan{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01s !important;animation-iteration-count:1 !important;transition:none !important}
+}
+</style>
 </head>
 <body>
 
-    <div class="container" id="mainContainer">
-        <h1>🎯 ترازوی ریاضی</h1>
-        <p class="subtitle">
-            <span class="hint-icon">👇</span> وزنه‌ها را روی ترازو بگذار و بالانسش کن!
-            <span class="hint-icon">👇</span>
-        </p>
+<div class="sun"></div>
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+<span class="fspan f1">×</span><span class="fspan f2">+</span><span class="fspan f3">=</span><span class="fspan f4">۳</span>
+<div class="grass"></div>
 
-        <!-- ===== SCALE AREA ===== -->
-        <div class="scale-area" id="scaleArea">
-            <!-- Beam Wrapper -->
-            <div class="beam-wrapper">
-                <div class="beam" id="beam">
-                    <!-- Hooks will be dynamically generated by JS -->
-                </div>
-            </div>
+<main>
+  <header>
+    <h1><span class="tilt">⚖️</span> ترازوی جادویی</h1>
+    <p class="tag">وزنه بگذار، زورِ دو طرف را حساب کن، ترازو را متعادل کن!</p>
+  </header>
 
-            <!-- Fulcrum Triangle -->
-            <div class="fulcrum"></div>
+  <div class="controls">
+    <button id="btnChallenge" class="btn b-purple">🎲 چالش جدید</button>
+    <button id="btnClear" class="btn b-red">🧹 پاک کن</button>
+    <button id="btnHelp" class="btn b-blue">💡 راهنما</button>
+    <button id="btnSound" class="btn b-green">🔊 صدا</button>
+    <div class="stars">⭐ <b id="stars">۰</b></div>
+  </div>
 
-            <!-- Support Column -->
-            <div class="support-column"></div>
-
-            <!-- Base -->
-            <div class="base"></div>
-
-            <!-- Ground Shadow -->
-            <div class="ground-shadow"></div>
-        </div>
-
-        <!-- ===== MOMENT INDICATORS ===== -->
-        <div class="moments-row">
-            <div class="moment-card left-card">
-                <span class="moment-icon">⬅️</span>
-                <span>گشتاور چپ:</span>
-                <span class="moment-value left-val" id="leftMomentDisplay">0</span>
-            </div>
-            <div class="balance-indicator" id="balanceIcon">⚖️</div>
-            <div class="moment-card right-card">
-                <span>گشتاور راست:</span>
-                <span class="moment-value right-val" id="rightMomentDisplay">0</span>
-                <span class="moment-icon">➡️</span>
-            </div>
-        </div>
-
-        <!-- ===== STATUS MESSAGE ===== -->
-        <div class="status-box" id="statusBox">
-            🖐️ اول یک وزنه انتخاب کن!
-        </div>
-
-        <!-- ===== EQUATION DISPLAY ===== -->
-        <div class="equation-display" id="equationDisplay">
-            <span id="eqLeft">0</span>
-            <span class="eq-equal" id="eqSymbol"> ≠ </span>
-            <span id="eqRight">0</span>
-        </div>
-
-        <!-- ===== WEIGHTS PALETTE ===== -->
-        <div class="palette-section">
-            <div class="palette-title">🧰 وزنه‌ها — یکی را انتخاب کن:</div>
-            <div class="weights-palette" id="weightsPalette">
-                <!-- Generated by JS -->
-            </div>
-        </div>
-
-        <!-- ===== CONTROLS ===== -->
-        <div class="controls">
-            <button class="btn btn-reset" id="resetBtn" title="پاک کردن همه وزنه‌ها">
-                🔄 شروع دوباره
-            </button>
-            <button class="btn btn-hint" id="hintBtn" title="نمایش یک مثال بالانس">
-                💡 راهنمایی
-            </button>
-        </div>
+  <section class="stage">
+    <div class="owl">
+      <div class="owl-face">🦉</div>
+      <div class="bubble" id="bubble">سلام! وزنه‌ها را بگیر و روی قلاب‌ها بینداز!</div>
     </div>
 
-    <script>
-        (function() {
-            // ============ CONFIGURATION ============
-            const MAX_DISTANCE = 5; // positions 1..5 on each side
-            const WEIGHT_VALUES = [1, 2, 3, 4, 5];
-            const MAX_ANGLE = 28; // degrees
-            const ANGLE_MULTIPLIER = 2.2; // angle = clamp(diff * multiplier, -MAX, MAX)
-            const HOOK_GAP_PX = 50; // pixel spacing between hooks on the beam
-            const BEAM_WIDTH = 620; // matches CSS
-            const BEAM_HEIGHT = 44;
+    <svg id="scale" viewBox="0 0 1000 620" aria-label="ترازو">
+      <defs>
+        <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E7C391"/><stop offset=".5" stop-color="#D0A56D"/><stop offset="1" stop-color="#BA8F55"/>
+        </linearGradient>
+        <linearGradient id="woodV" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#BA8F55"/><stop offset=".5" stop-color="#E0BA86"/><stop offset="1" stop-color="#BA8F55"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="500" cy="586" rx="275" ry="16" fill="rgba(60,40,20,.14)"/>
+      <g id="stand">
+        <rect x="320" y="546" width="360" height="34" rx="15" fill="url(#wood)" stroke="#8C6239" stroke-width="3"/>
+        <rect x="348" y="534" width="304" height="18" rx="9" fill="#C89B64" stroke="#8C6239" stroke-width="2.5"/>
+        <path d="M479 244 L521 244 L552 540 L448 540 Z" fill="url(#woodV)" stroke="#8C6239" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M497 280 Q503 380 494 500" fill="none" stroke="#B08A57" stroke-width="3" opacity=".7"/>
+        <circle id="lamp" cx="500" cy="470" r="9"/>
+      </g>
+      <g id="beamG">
+        <rect id="beamRect" x="120" y="222" width="760" height="20" rx="10" fill="url(#wood)" stroke="#8C6239" stroke-width="3"/>
+        <circle cx="128" cy="232" r="8" fill="#BA8F55" stroke="#8C6239" stroke-width="2.5"/>
+        <circle cx="872" cy="232" r="8" fill="#BA8F55" stroke="#8C6239" stroke-width="2.5"/>
+        <polygon points="493,224 507,224 500,187" fill="#E23B3B" stroke="#A81F1F" stroke-width="2" stroke-linejoin="round"/>
+        <g id="hooks"></g>
+        <g id="hangers"></g>
+      </g>
+      <circle cx="500" cy="238" r="15" fill="#BA8F55" stroke="#8C6239" stroke-width="3"/>
+      <circle cx="500" cy="238" r="5.5" fill="#5B3A1E"/>
+    </svg>
+    <div id="banner">🎉 آفرین! ترازو متعادل شد!</div>
+  </section>
 
-            // Colors for each weight value (1..5)
-            const WEIGHT_COLORS = {
-                1: { bg: 'linear-gradient(135deg, #6EDDD6, #4ECDC4)', textColor: '#fff', shadow: 'rgba(78,205,196,0.5)' },
-                2: { bg: 'linear-gradient(135deg, #6BC5E0, #45B7D1)', textColor: '#fff', shadow: 'rgba(69,183,209,0.5)' },
-                3: { bg: 'linear-gradient(135deg, #FDE45A, #F9CA24)', textColor: '#5D4037', shadow: 'rgba(249,202,36,0.6)' },
-                4: { bg: 'linear-gradient(135deg, #FFB85C, #FF9F43)', textColor: '#fff', shadow: 'rgba(255,159,67,0.5)' },
-                5: { bg: 'linear-gradient(135deg, #FF8A8A, #FF6B6B)', textColor: '#fff', shadow: 'rgba(255,107,107,0.5)' },
-            };
+  <section class="board">
+    <div class="sides" dir="ltr">
+      <div class="side left">
+        <h3>سمت چپِ ترازو</h3>
+        <div class="terms" id="termsL"></div>
+        <div class="total">زورِ طرف: <b id="sumL">۰</b></div>
+      </div>
+      <div class="vs"><span id="sign">=</span></div>
+      <div class="side right">
+        <h3>سمت راستِ ترازو</h3>
+        <div class="terms" id="termsR"></div>
+        <div class="total">زورِ طرف: <b id="sumR">۰</b></div>
+      </div>
+    </div>
+    <p id="status" class="status neutral">ترازو خالی است؛ وزنه‌ها را امتحان کن!</p>
+  </section>
 
-            // ============ STATE ============
-            let selectedWeight = null; // 1..5 or null
-            let hooks = []; // { side: 'left'|'right', distance: 1..5, weights: [], hookElement, stackElement }
+  <div class="shelf">
+    <p class="tray-hint">🧺 وزنه‌ها را بکش و روی قلاب بینداز — یا اول روی وزنه کلیک کن، بعد قلاب را انتخاب کن</p>
+    <div class="tray" id="tray"></div>
+  </div>
+</main>
 
-            // ============ DOM REFERENCES ============
-            const beamEl = document.getElementById('beam');
-            const beamWrapper = document.querySelector('.beam-wrapper');
-            const scaleArea = document.getElementById('scaleArea');
-            const statusBox = document.getElementById('statusBox');
-            const balanceIcon = document.getElementById('balanceIcon');
-            const leftMomentDisplay = document.getElementById('leftMomentDisplay');
-            const rightMomentDisplay = document.getElementById('rightMomentDisplay');
-            const equationDisplay = document.getElementById('equationDisplay');
-            const eqLeft = document.getElementById('eqLeft');
-            const eqRight = document.getElementById('eqRight');
-            const eqSymbol = document.getElementById('eqSymbol');
-            const weightsPalette = document.getElementById('weightsPalette');
-            const resetBtn = document.getElementById('resetBtn');
-            const hintBtn = document.getElementById('hintBtn');
-            const mainContainer = document.getElementById('mainContainer');
+<div class="overlay" id="help">
+  <div class="help-card">
+    <h2>💡 چطور بازی کنیم؟</h2>
+    <ul>
+      <li>🖐️ وزنه‌ها را بگیر و روی قلاب‌های ترازو بینداز (یا کلیک کن و قلاب را انتخاب کن).</li>
+      <li>💪 زورِ هر وزنه = <b>وزنش × شمارهٔ قلابش</b>.<br>مثلاً وزنهٔ ۲ روی قلاب ۳ می‌شود: ۲ × ۳ = ۶</li>
+      <li>⚖️ اگر زورِ دو طرف برابر شود، ترازو صاف می‌ایستد و جشن می‌گیریم!</li>
+      <li>🗑️ برای برداشتن وزنه، رویش کلیک کن یا آن را بکش و بیرون بینداز.</li>
+      <li>🎲 با دکمهٔ «چالش جدید» معمای تازه بگیر و ستاره جمع کن!</li>
+    </ul>
+    <div class="ex">مثال تعادل: وزنهٔ ۶ روی قلاب ۲ ← ۶×۲=۱۲ &nbsp;|&nbsp; وزنهٔ ۴ روی قلاب ۳ ← ۴×۳=۱۲ ← تساوی! 🎉</div>
+    <button id="btnClose" class="btn b-green">فهمیدم، بریم بازی! 🚀</button>
+  </div>
+</div>
 
-            // ============ HOOK CREATION ============
-            function createHooks() {
-                beamEl.innerHTML = '';
-                hooks = [];
-                let hookIndex = 0;
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const svg=$('#scale'),beamG=$('#beamG'),hooks=$('#hooks'),hangers=$('#hangers');
+const CX=500,PY=238,HY=246,UNIT=70,MAX_ANGLE=13,MAX_STACK=4;
+const POS=[-5,-4,-3,-2,-1,1,2,3,4,5];
+const HX=p=>CX+p*UNIT;
+const WEIGHTS={
+  1:{c:'#57B7EC',d:'#2E7FB8',w:34,h:34},
+  2:{c:'#67C25C',d:'#3E8B36',w:40,h:40},
+  3:{c:'#FFA23E',d:'#C56A0E',w:46,h:46},
+  5:{c:'#F2545B',d:'#B92E35',w:54,h:54},
+  10:{c:'#9B5DE5',d:'#6C33B0',w:66,h:64}
+};
+const state=new Map();POS.forEach(p=>state.set(p,[]));
+let angle=0,vel=0,selected=null,drag=null,lastBal=false;
+let stars=0,challengeActive=false,muted=false,AC=null,bannerTimer=null;
 
-                // Left side: distances 5,4,3,2,1 (far to near, from left)
-                for (let d = MAX_DISTANCE; d >= 1; d--) {
-                    const xPos = -d * HOOK_GAP_PX;
-                    const hook = createHookElement('left', d, xPos, hookIndex);
-                    hooks.push(hook);
-                    beamEl.appendChild(hook.hookElement);
-                    hookIndex++;
-                }
+/* ---------- صدا ---------- */
+function tone(f,d=.12,type='sine',vol=.18,delay=0){
+  if(muted)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();
+    o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.03);
+  }catch(e){}
+}
+const sndPick=()=>tone(560,.07,'sine',.15);
+const sndPlace=()=>{tone(190,.1,'triangle',.28);tone(95,.12,'sine',.18,.02);};
+const sndRemove=()=>tone(320,.08,'sine',.14);
+const sndNo=()=>tone(130,.16,'square',.06);
+const sndWin=()=>[523,659,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.2,i*.13));
 
-                // Right side: distances 1,2,3,4,5 (near to far, to the right)
-                for (let d = 1; d <= MAX_DISTANCE; d++) {
-                    const xPos = d * HOOK_GAP_PX;
-                    const hook = createHookElement('right', d, xPos, hookIndex);
-                    hooks.push(hook);
-                    beamEl.appendChild(hook.hookElement);
-                    hookIndex++;
-                }
-            }
+/* ---------- ساخت قلاب‌ها ---------- */
+hooks.innerHTML=POS.map(p=>`
+  <line x1="${HX(p)}" y1="222" x2="${HX(p)}" y2="228" stroke="#8C6239" stroke-width="2" opacity=".65"/>
+  <text x="${HX(p)}" y="235">${fa(Math.abs(p))}</text>
+  <circle cx="${HX(p)}" cy="246" r="4.5" fill="#6B4423" stroke="#4A2F14" stroke-width="1.5"/>
+  <circle class="ring" data-pos="${p}" cx="${HX(p)}" cy="256" r="21"/>`).join('');
+hooks.querySelectorAll('.ring').forEach(r=>{
+  r.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(selected!=null)addWeight(+r.dataset.pos,selected);
+  });
+});
 
-            function createHookElement(side, distance, xPos, index) {
-                const hookDiv = document.createElement('div');
-                hookDiv.className = 'hook';
-                hookDiv.dataset.side = side;
-                hookDiv.dataset.distance = distance;
-                hookDiv.dataset.index = index;
-                hookDiv.style.left = `calc(50% + ${xPos - 8}px)`;
-                hookDiv.style.top = `${BEAM_HEIGHT - 10}px`;
+/* ---------- شکل وزنه ---------- */
+function weightBody(v){
+  const s=WEIGHTS[v],w=s.w,h=s.h,tw=w*.5;
+  return `<g class="w" data-v="${v}">
+    <circle cx="0" cy="6" r="5.5" fill="none" stroke="${s.d}" stroke-width="3"/>
+    <path d="M ${-tw/2} 11 L ${tw/2} 11 L ${w/2} ${h} Q 0 ${h+6} ${-w/2} ${h} Z"
+      fill="${s.c}" stroke="${s.d}" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="${-w*.2}" cy="${11+(h-11)*.42}" rx="${w*.09}" ry="${h*.2}" fill="rgba(255,255,255,.4)"/>
+    <text x="0" y="${(11+h)/2+1}" text-anchor="middle" dominant-baseline="central"
+      font-family="Lalezar" font-size="${Math.min(24,w*.52)}" fill="#fff"
+      stroke="rgba(0,0,0,.28)" stroke-width="3" paint-order="stroke">${fa(v)}</text>
+  </g>`;
+}
 
-                // Hook ring
-                const ring = document.createElement('div');
-                ring.className = 'hook-ring';
-                hookDiv.appendChild(ring);
+/* ---------- قفسه وزنه‌ها ---------- */
+const tray=$('#tray');
+[1,2,3,5,10].forEach(v=>{
+  const s=WEIGHTS[v],el=document.createElement('div');
+  el.className='tray-item';el.dataset.v=v;
+  el.innerHTML=`<svg viewBox="${-s.w/2-6} -3 ${s.w+12} ${s.h+21}">${weightBody(v)}</svg>
+    <span>${fa(v)} کیلو</span>`;
+  tray.appendChild(el);
+});
+tray.addEventListener('pointerdown',e=>{
+  const t=e.target.closest('.tray-item');if(!t)return;
+  e.preventDefault();startDrag(+t.dataset.v,null,e);
+});
 
-                // Distance label above hook
-                const label = document.createElement('div');
-                label.className = 'dist-label';
-                label.textContent = distance;
-                label.style.top = `-24px`;
-                label.style.left = '50%';
-                label.style.transform = 'translateX(-50%)';
-                hookDiv.appendChild(label);
+/* ---------- وضعیت ---------- */
+const torque=()=>{let t=0;state.forEach((a,p)=>a.forEach(v=>t+=v*p));return t;};
+const count=()=>{let c=0;state.forEach(a=>c+=a.length);return c;};
+const isBalanced=()=>count()>0&&torque()===0;
 
-                // Weight stack (hanging from hook)
-                const stack = document.createElement('div');
-                stack.className = 'weight-stack';
-                stack.style.top = '18px';
-                stack.style.left = '50%';
-                stack.style.transform = 'translateX(-50%)';
-                hookDiv.appendChild(stack);
+function renderWeights(){
+  let html='';
+  POS.forEach(p=>{
+    const arr=state.get(p);if(!arr.length)return;
+    let off=0,inner='';
+    arr.forEach(v=>{
+      const s=WEIGHTS[v];
+      inner+=`<line x1="0" y1="${off}" x2="0" y2="${off+14}" stroke="#7A4E24" stroke-width="2.5"/>
+        <g transform="translate(0 ${off+14})">${weightBody(v)}</g>`;
+      off+=14+s.h+6;
+    });
+    html+=`<g class="hanger" data-pos="${p}" transform="translate(${HX(p)} ${HY}) rotate(${-angle})">${inner}</g>`;
+  });
+  hangers.innerHTML=html;
+}
 
-                // Click handler
-                hookDiv.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    onHookClick(index);
-                });
+function renderPanel(){
+  const L=[],R=[];
+  state.forEach((arr,p)=>arr.forEach(v=>{(p<0?L:R).push({v,d:Math.abs(p)});}));
+  const sum=a=>a.reduce((s,t)=>s+t.v*t.d,0);
+  $('#termsL').innerHTML=L.length?L.map(t=>`<span class="chip">${fa(t.v)} × ${fa(t.d)}</span>`).join(''):'<span class="empty">خالی</span>';
+  $('#termsR').innerHTML=R.length?R.map(t=>`<span class="chip">${fa(t.v)} × ${fa(t.d)}</span>`).join(''):'<span class="empty">خالی</span>';
+  const sl=sum(L),sr=sum(R);
+  $('#sumL').textContent=fa(sl);$('#sumR').textContent=fa(sr);
+  const sign=$('#sign');
+  sign.textContent=sl===sr?'=':(sl>sr?'>':'<');
+  sign.classList.toggle('eq',sl===sr&&(sl+sr)>0);
+  const st=$('#status');
+  if(count()===0){st.textContent='ترازو خالی است؛ وزنه‌ها را امتحان کن!';st.className='status neutral';}
+  else if(sl===sr){st.textContent='🎉 ترازو متعادل است! زورِ دو طرف برابر شد.';st.className='status ok';}
+  else if(sl>sr){st.textContent='سمت چپ سنگین‌تر است ⬇️';st.className='status warn';}
+  else{st.textContent='سمت راست سنگین‌تر است ⬇️';st.className='status warn';}
+}
 
-                return {
-                    side,
-                    distance,
-                    weights: [],
-                    hookElement: hookDiv,
-                    stackElement: stack,
-                    ringElement: ring,
-                    index,
-                };
-            }
+function owl(msg){
+  const b=$('#bubble');b.textContent=msg;
+  b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+}
 
-            // ============ PALETTE CREATION ============
-            function createPalette() {
-                weightsPalette.innerHTML = '';
-                WEIGHT_VALUES.forEach(val => {
-                    const btn = document.createElement('button');
-                    btn.className = 'palette-weight';
-                    btn.dataset.value = val;
-                    btn.type = 'button';
-                    btn.setAttribute('aria-label', `وزنه ${val}`);
+function addWeight(pos,v){
+  const arr=state.get(pos);
+  if(arr.length>=MAX_STACK){owl('اوپس! این قلاب دیگر جا ندارد! 😅');sndNo();return false;}
+  arr.push(v);afterChange();sndPlace();return true;
+}
+function afterChange(){renderWeights();renderPanel();}
 
-                    const circle = document.createElement('div');
-                    circle.className = 'palette-circle';
-                    circle.style.background = WEIGHT_COLORS[val].bg;
-                    circle.style.color = WEIGHT_COLORS[val].textColor;
-                    circle.textContent = val;
+/* ---------- کشیدن و رها کردن ---------- */
+function svgPoint(e){
+  const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+function hookAt(pt){
+  const rad=angle*Math.PI/180,c=Math.cos(rad),s=Math.sin(rad);
+  let best=null,bd=62;
+  POS.forEach(p=>{
+    const dx=p*UNIT,dy=HY-PY;
+    const wx=CX+dx*c-dy*s,wy=PY+dx*s+dy*c;
+    const d=Math.hypot(pt.x-wx,pt.y-wy);
+    if(d<bd){bd=d;best=p;}
+  });
+  return best;
+}
+function startDrag(v,from,e){
+  drag={v,from,moved:0,sx:e.clientX,sy:e.clientY};
+  if(from){state.get(from.pos).splice(from.index,1);renderWeights();renderPanel();}
+  const s=WEIGHTS[v],g=document.createElement('div');
+  g.className='ghost';
+  g.innerHTML=`<svg viewBox="${-s.w/2-6} -3 ${s.w+12} ${s.h+21}">${weightBody(v)}</svg>`;
+  document.body.appendChild(g);drag.el=g;
+  moveGhost(e);document.body.classList.add('dragging');
+  window.addEventListener('pointermove',onMove);
+  window.addEventListener('pointerup',onUp);
+}
+function moveGhost(e){drag.el.style.left=e.clientX+'px';drag.el.style.top=e.clientY+'px';}
+function clearHot(){hooks.querySelectorAll('.ring').forEach(r=>r.classList.remove('hot'));}
+function onMove(e){
+  if(!drag)return;e.preventDefault();
+  drag.moved=Math.max(drag.moved,Math.abs(e.clientX-drag.sx),Math.abs(e.clientY-drag.sy));
+  moveGhost(e);clearHot();
+  const hp=hookAt(svgPoint(e));
+  if(hp!=null)hooks.querySelector(`.ring[data-pos="${hp}"]`).classList.add('hot');
+}
+function restore(from,v){state.get(from.pos).splice(Math.min(from.index,state.get(from.pos).length),0,v);afterChange();}
+function onUp(e){
+  if(!drag)return;
+  window.removeEventListener('pointermove',onMove);
+  window.removeEventListener('pointerup',onUp);
+  const {v,from,moved,el}=drag;el.remove();clearHot();
+  document.body.classList.remove('dragging');
+  if(!from&&moved<8){toggleSelect(v);drag=null;return;}          // کلیک روی قفسه = انتخاب
+  if(from&&moved<8){sndRemove();owl('وزنه برداشته شد! 🗑️');drag=null;return;} // کلیک روی وزنه = برداشتن
+  const hp=hookAt(svgPoint(e));
+  if(hp!=null){if(addWeight(hp,v)){/*ok*/}else if(from)restore(from,v);}
+  else if(from)restore(from,v);
+  else sndRemove();
+  drag=null;
+}
+hangers.addEventListener('pointerdown',e=>{
+  const w=e.target.closest('.w');if(!w)return;
+  e.preventDefault();
+  const hg=w.closest('.hanger'),pos=+hg.dataset.pos;
+  const idx=[...hg.querySelectorAll('.w')].indexOf(w);
+  startDrag(+w.dataset.v,{pos,index:idx},e);
+});
+function toggleSelect(v){
+  selected=(selected===v)?null:v;
+  document.body.classList.toggle('selecting',selected!=null);
+  tray.querySelectorAll('.tray-item').forEach(el=>el.classList.toggle('sel',+el.dataset.v===selected));
+  if(selected!=null){sndPick();owl('حالا یک قلاب را انتخاب کن! 👆');}
+}
+document.addEventListener('click',e=>{
+  if(selected!=null&&!e.target.closest('.ring')&&!e.target.closest('.tray-item'))toggleSelect(selected);
+});
+svg.addEventListener('contextmenu',e=>e.preventDefault());
 
-                    const label = document.createElement('div');
-                    label.className = 'palette-label';
-                    label.textContent = `وزن ${val}`;
+/* ---------- حلقهٔ حرکت (فیزیک تعادل) ---------- */
+function frame(now){
+  const net=torque();
+  const target=count()===0?Math.sin(now/900)*1.2:MAX_ANGLE*Math.tanh(net/45);
+  vel+=(target-angle)*.045;vel*=.9;angle+=vel;
+  beamG.setAttribute('transform',`rotate(${angle.toFixed(3)} ${CX} ${PY})`);
+  hangers.querySelectorAll('.hanger').forEach(h=>{
+    h.setAttribute('transform',`translate(${(+h.dataset.pos)*UNIT+CX} ${HY}) rotate(${(-angle).toFixed(3)})`);
+  });
+  const bal=isBalanced();
+  svg.classList.toggle('balanced',bal);
+  if(bal&&!lastBal)celebrate();
+  lastBal=bal;
+  requestAnimationFrame(frame);
+}
 
-                    btn.appendChild(circle);
-                    btn.appendChild(label);
+/* ---------- جشن ---------- */
+function celebrate(){
+  confetti();sndWin();
+  const b=$('#banner');b.classList.add('show');
+  clearTimeout(bannerTimer);bannerTimer=setTimeout(()=>b.classList.remove('show'),2600);
+  if(challengeActive){
+    challengeActive=false;stars++;$('#stars').textContent=fa(stars);
+    owl('🌟 عالی بود! چالش را حل کردی و یک ستاره گرفتی!');
+  }else owl('🎉 آفرین! دو طرف برابر شدند!');
+}
+function confetti(){
+  const colors=['#F2545B','#57B7EC','#FFD93B','#67C25C','#9B5DE5','#FFA23E'];
+  for(let i=0;i<90;i++){
+    const c=document.createElement('i');c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[i%6];
+    c.style.width=(8+Math.random()*8)+'px';
+    c.style.height=(10+Math.random()*10)+'px';
+    if(Math.random()<.4)c.style.borderRadius='50%';
+    c.style.animationDuration=(2.4+Math.random()*1.8)+'s';
+    c.style.animationDelay=(Math.random()*.5)+'s';
+    document.body.appendChild(c);setTimeout(()=>c.remove(),4800);
+  }
+}
 
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        onPaletteClick(val);
-                    });
+/* ---------- چالش و پاک کردن ---------- */
+$('#btnChallenge').addEventListener('click',()=>{
+  clearAll(true);
+  const side=Math.random()<.5?-1:1,n=Math.random()<.45?2:1;
+  for(let i=0;i<n;i++){
+    const v=[2,3,5][Math.floor(Math.random()*3)];
+    state.get(side*(1+Math.floor(Math.random()*5))).push(v);
+  }
+  challengeActive=true;afterChange();sndPick();
+  owl('🤔 حالا وزنه‌هایی بگذار که ترازو صاف بایستد!');
+});
+function clearAll(silent){
+  POS.forEach(p=>state.set(p,[]));
+  challengeActive=false;afterChange();
+  if(!silent){sndRemove();owl('ترازو پاک شد! دوباره امتحان کن 😊');}
+}
+$('#btnClear').addEventListener('click',()=>clearAll(false));
+$('#btnHelp').addEventListener('click',()=>$('#help').classList.add('open'));
+$('#btnClose').addEventListener('click',()=>$('#help').classList.remove('open'));
+$('#help').addEventListener('click',e=>{if(e.target.id==='help')e.target.classList.remove('open');});
+$('#btnSound').addEventListener('click',e=>{
+  muted=!muted;e.currentTarget.textContent=muted?'🔇 بی‌صدا':'🔊 صدا';
+});
+document.addEventListener('pointerdown',function init(){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();}catch(err){}
+  document.removeEventListener('pointerdown',init);
+});
 
-                    weightsPalette.appendChild(btn);
-                });
-            }
+/* ---------- نکته‌های جغد ---------- */
+const tips=[
+  'هر چه قلاب دورتر باشد، زورِ وزنه بیشتر می‌شود! 💪',
+  'وزنهٔ ۲ روی قلاب ۳ همان زورِ وزنهٔ ۳ روی قلاب ۲ را دارد!',
+  'زورِ هر وزنه = وزن × شمارهٔ قلاب!',
+  'برای برداشتن وزنه، رویش کلیک کن یا آن را بکش و بیرون بینداز.'
+];
+let tipI=0;
+setInterval(()=>{if(count()===0&&!drag){owl(tips[tipI++%tips.length]);}},9000);
 
-            // ============ EVENT HANDLERS ============
-            function onPaletteClick(val) {
-                if (selectedWeight === val) {
-                    // Deselect
-                    selectedWeight = null;
-                    updateStatus('🖐️ یک وزنه انتخاب کن!');
-                } else {
-                    selectedWeight = val;
-                    updateStatus(`✅ وزنه ${val} انتخاب شد — حالا روی یک قلاب کلیک کن!`);
-                }
-                updatePaletteHighlight();
-                updateAllHookHighlights();
-            }
-
-            function onHookClick(hookIndex) {
-                if (selectedWeight === null) {
-                    updateStatus('⚠️ اول یک وزنه از پایین انتخاب کن!', 'warning');
-                    // Gentle shake on status
-                    statusBox.style.animation = 'none';
-                    void statusBox.offsetHeight;
-                    statusBox.style.animation = 'gentleShake 0.35s ease';
-                    return;
-                }
-
-                const hook = hooks[hookIndex];
-                // Add weight to this hook
-                hook.weights.push(selectedWeight);
-                renderHookWeights(hook);
-                updateScale();
-                updateStatus(`✅ وزنه ${selectedWeight} روی قلاب فاصله ${hook.distance} قرار گرفت!`);
-
-                // Keep weight selected for easy repeat placement
-                // (user can click the palette item again to deselect)
-            }
-
-            function onWeightClick(hookIndex, weightPositionInArray) {
-                const hook = hooks[hookIndex];
-                if (weightPositionInArray >= 0 && weightPositionInArray < hook.weights.length) {
-                    // Animate removal, then remove from state
-                    const stackEl = hook.stackElement;
-                    const items = stackEl.querySelectorAll('.weight-item');
-                    const targetItem = items[weightPositionInArray];
-                    if (targetItem) {
-                        targetItem.classList.add('removing');
-                        setTimeout(() => {
-                            hook.weights.splice(weightPositionInArray, 1);
-                            renderHookWeights(hook);
-                            updateScale();
-                            updateStatus('🗑️ وزنه حذف شد!');
-                        }, 280);
-                    } else {
-                        hook.weights.splice(weightPositionInArray, 1);
-                        renderHookWeights(hook);
-                        updateScale();
-                        updateStatus('🗑️ وزنه حذف شد!');
-                    }
-                }
-            }
-
-            // ============ RENDER HOOK WEIGHTS ============
-            function renderHookWeights(hook) {
-                const stack = hook.stackElement;
-                stack.innerHTML = '';
-
-                hook.weights.forEach((w, idx) => {
-                    const item = document.createElement('div');
-                    item.className = 'weight-item';
-
-                    const string = document.createElement('div');
-                    string.className = 'weight-string';
-
-                    const circle = document.createElement('div');
-                    circle.className = `weight-circle w${w}`;
-                    circle.textContent = w;
-                    circle.style.background = WEIGHT_COLORS[w].bg;
-                    circle.style.color = WEIGHT_COLORS[w].textColor;
-
-                    item.appendChild(string);
-                    item.appendChild(circle);
-
-                    // Click to remove this specific weight
-                    item.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        onWeightClick(hook.index, idx);
-                    });
-
-                    stack.appendChild(item);
-                });
-
-                // Apply counter-rotation to keep weights vertical
-                const beamAngle = getCurrentBeamAngle();
-                stack.style.transform = `translateX(-50%) rotate(${-beamAngle}deg)`;
-            }
-
-            function getCurrentBeamAngle() {
-                const computed = beamEl.style.transform;
-                if (!computed || computed === 'none') return 0;
-                const match = computed.match(/rotate\(([-\d.]+)deg\)/);
-                return match ? parseFloat(match[1]) : 0;
-            }
-
-            // ============ CALCULATE MOMENTS ============
-            function calculateMoments() {
-                let leftMoment = 0;
-                let rightMoment = 0;
-                const leftBreakdown = [];
-                const rightBreakdown = [];
-
-                hooks.forEach(hook => {
-                    const totalWeightAtHook = hook.weights.reduce((sum, w) => sum + w, 0);
-                    const moment = totalWeightAtHook * hook.distance;
-                    if (hook.side === 'left') {
-                        leftMoment += moment;
-                        if (totalWeightAtHook > 0) {
-                            leftBreakdown.push(`${totalWeightAtHook}×${hook.distance}=${moment}`);
-                        }
-                    } else {
-                        rightMoment += moment;
-                        if (totalWeightAtHook > 0) {
-                            rightBreakdown.push(`${totalWeightAtHook}×${hook.distance}=${moment}`);
-                        }
-                    }
-                });
-
-                return { leftMoment, rightMoment, leftBreakdown, rightBreakdown };
-            }
-
-            // ============ UPDATE SCALE ============
-            function updateScale() {
-                const { leftMoment, rightMoment, leftBreakdown, rightBreakdown } = calculateMoments();
-                const diff = rightMoment - leftMoment;
-
-                // Calculate beam angle
-                let angle = diff * ANGLE_MULTIPLIER;
-                angle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, angle));
-                angle = Math.round(angle * 10) / 10; // Round to 1 decimal
-
-                // Apply beam rotation
-                beamEl.style.transform = `rotate(${angle}deg)`;
-
-                // Apply counter-rotation to all weight stacks
-                hooks.forEach(hook => {
-                    hook.stackElement.style.transform = `translateX(-50%) rotate(${-angle}deg)`;
-                });
-
-                // Update moment displays
-                leftMomentDisplay.textContent = leftMoment;
-                rightMomentDisplay.textContent = rightMoment;
-
-                // Update equation display
-                if (leftBreakdown.length === 0) {
-                    eqLeft.textContent = '0';
-                } else {
-                    eqLeft.textContent = leftBreakdown.join(' + ');
-                }
-                if (rightBreakdown.length === 0) {
-                    eqRight.textContent = '0';
-                } else {
-                    eqRight.textContent = rightBreakdown.join(' + ');
-                }
-
-                // Update balance status
-                const isBalanced = (leftMoment === rightMoment) && (leftMoment > 0 || rightMoment > 0);
-                const isEmpty = (leftMoment === 0 && rightMoment === 0);
-
-                if (isBalanced) {
-                    eqSymbol.textContent = ' = ';
-                    eqSymbol.style.color = 'var(--success-green)';
-                    balanceIcon.textContent = '🎉';
-                    balanceIcon.classList.add('balanced');
-                    mainContainer.classList.add('balanced-celebrate');
-                    mainContainer.classList.remove('unbalanced-shake');
-                    updateStatus('🎉 ترازو بالانس است! آفرین! 👏', 'success');
-                } else {
-                    eqSymbol.textContent = ' ≠ ';
-                    eqSymbol.style.color = 'var(--warning-orange)';
-                    balanceIcon.textContent = '⚖️';
-                    balanceIcon.classList.remove('balanced');
-                    mainContainer.classList.remove('balanced-celebrate');
-
-                    if (isEmpty) {
-                        updateStatus('🖐️ وزنه‌ها را روی ترازو بگذار!');
-                    } else if (leftMoment > rightMoment) {
-                        updateStatus('⬅️ سمت چپ سنگین‌تر است!', 'warning');
-                        // Small shake for unbalanced
-                        if (!mainContainer.classList.contains('unbalanced-shake')) {
-                            mainContainer.classList.add('unbalanced-shake');
-                            setTimeout(() => mainContainer.classList.remove('unbalanced-shake'), 420);
-                        }
-                    } else {
-                        updateStatus('➡️ سمت راست سنگین‌تر است!', 'warning');
-                        if (!mainContainer.classList.contains('unbalanced-shake')) {
-                            mainContainer.classList.add('unbalanced-shake');
-                            setTimeout(() => mainContainer.classList.remove('unbalanced-shake'), 420);
-                        }
-                    }
-                }
-            }
-
-            function updateStatus(msg, type) {
-                statusBox.textContent = msg;
-                statusBox.className = 'status-box';
-                if (type === 'success') statusBox.classList.add('success');
-                if (type === 'warning') statusBox.classList.add('warning');
-            }
-
-            // ============ PALETTE HIGHLIGHT ============
-            function updatePaletteHighlight() {
-                const allPaletteButtons = weightsPalette.querySelectorAll('.palette-weight');
-                allPaletteButtons.forEach(btn => {
-                    const val = parseInt(btn.dataset.value);
-                    if (selectedWeight === val) {
-                        btn.classList.add('selected');
-                    } else {
-                        btn.classList.remove('selected');
-                    }
-                });
-            }
-
-            function updateAllHookHighlights() {
-                hooks.forEach(hook => {
-                    if (selectedWeight !== null) {
-                        hook.ringElement.style.boxShadow =
-                            '0 0 0 5px rgba(255, 215, 100, 0.5), 0 0 18px rgba(255, 180, 50, 0.4)';
-                        hook.ringElement.style.transform = 'scale(1.1)';
-                    } else {
-                        hook.ringElement.style.boxShadow = '';
-                        hook.ringElement.style.transform = '';
-                    }
-                });
-            }
-
-            // ============ RESET ============
-            function resetScale() {
-                selectedWeight = null;
-                hooks.forEach(hook => {
-                    hook.weights = [];
-                    renderHookWeights(hook);
-                });
-                updatePaletteHighlight();
-                updateAllHookHighlights();
-                updateScale();
-                updateStatus('🔄 همه وزنه‌ها پاک شد! از نو شروع کن!');
-                mainContainer.classList.remove('balanced-celebrate', 'unbalanced-shake');
-                balanceIcon.classList.remove('balanced');
-                balanceIcon.textContent = '⚖️';
-                eqSymbol.textContent = ' ≠ ';
-                eqSymbol.style.color = 'var(--warning-orange)';
-            }
-
-            // ============ HINT ============
-            function showHint() {
-                resetScale();
-                selectedWeight = null;
-                updatePaletteHighlight();
-
-                // Example: put a 3 at distance 2 on left, and a 2 at distance 3 on right
-                const leftHook = hooks.find(h => h.side === 'left' && h.distance === 2);
-                const rightHook = hooks.find(h => h.side === 'right' && h.distance === 3);
-                if (leftHook && rightHook) {
-                    leftHook.weights.push(3);
-                    rightHook.weights.push(2);
-                }
-                renderHookWeights(leftHook);
-                renderHookWeights(rightHook);
-                updateScale();
-                updateStatus('💡 مثال: 3×2 در چپ = 2×3 در راست — بالانس! 🎉', 'success');
-            }
-
-            // ============ CLICK OUTSIDE TO DESELECT ============
-            document.addEventListener('click', (e) => {
-                if (selectedWeight !== null) {
-                    // Check if click was outside palette and hooks
-                    const isPalette = e.target.closest('.weights-palette');
-                    const isHook = e.target.closest('.hook');
-                    const isWeightItem = e.target.closest('.weight-item');
-                    if (!isPalette && !isHook && !isWeightItem) {
-                        selectedWeight = null;
-                        updatePaletteHighlight();
-                        updateAllHookHighlights();
-                        updateStatus('🖐️ یک وزنه انتخاب کن!');
-                    }
-                }
-            });
-
-            // ============ INIT ============
-            function init() {
-                createHooks();
-                createPalette();
-                updateScale();
-                updateStatus('🖐️ اول یک وزنه انتخاب کن!');
-                updateAllHookHighlights();
-            }
-
-            // Event listeners for buttons
-            resetBtn.addEventListener('click', resetScale);
-            hintBtn.addEventListener('click', showHint);
-
-            // Keyboard support
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'r' || e.key === 'R') {
-                    resetScale();
-                }
-                if (e.key === 'h' || e.key === 'H') {
-                    showHint();
-                }
-                if (e.key >= '1' && e.key <= '5') {
-                    const val = parseInt(e.key);
-                    if (selectedWeight === val) {
-                        selectedWeight = null;
-                    } else {
-                        selectedWeight = val;
-                        updateStatus(`✅ وزنه ${val} انتخاب شد — حالا روی یک قلاب کلیک کن!`);
-                    }
-                    updatePaletteHighlight();
-                    updateAllHookHighlights();
-                }
-            });
-
-            // Start
-            init();
-        })();
-    </script>
+/* ---------- شروع ---------- */
+renderWeights();renderPanel();
+requestAnimationFrame(frame);
+</script>
 </body>
 </html>
