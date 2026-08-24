@@ -40,7 +40,6 @@ main{position:relative;z-index:1}
 .screen.active{display:block;animation:screenIn .45s ease both}
 .screen.center{align-items:center;justify-content:center;flex-direction:column}
 @keyframes screenIn{from{opacity:0;transform:translateY(16px)}}
-.hidden{display:none!important}
 
 .btn{font-weight:800;border:none;border-radius:13px;padding:11px 20px;cursor:pointer;font-size:15px;transition:.2s}
 .btn-gold{background:linear-gradient(#ffe168,#ffb703);color:#4a3400;box-shadow:0 5px 0 #b97e00,0 12px 20px rgba(0,0,0,.3)}
@@ -73,17 +72,7 @@ h1{font-family:'Lalezar';font-size:clamp(46px,9vw,78px);color:var(--gold);text-a
 .deck .ds{font-size:13px;color:#5b6d64;font-weight:600}
 .deck .chev{margin-right:auto;font-size:24px;color:var(--acc);transition:.22s}
 .deck:hover .chev{transform:translateX(-6px)}
-
-/* ⏱ انتخاب زمان نمایش کارت‌ها */
-.pvSet{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:16px;width:min(560px,92vw);
-  background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:10px 16px}
-.pvLabel{font-size:13.5px;font-weight:700}
-.pvOpts{display:flex;gap:8px}
-.pvOpt{border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 14px;font-weight:800;font-size:13px;cursor:pointer;transition:.2s}
-.pvOpt:hover{transform:translateY(-2px)}
-.pvOpt.on{background:linear-gradient(#ffe168,#ffb703);color:#4a3400;border-color:#ffb703;box-shadow:0 4px 0 #b97e00}
-
-.howto{width:min(560px,92vw);margin-top:16px;border:2px dashed rgba(255,255,255,.4);border-radius:14px;padding:12px 18px;
+.howto{width:min(560px,92vw);margin-top:18px;border:2px dashed rgba(255,255,255,.4);border-radius:14px;padding:12px 18px;
   font-size:13.5px;line-height:2;color:#dff0e8;background:rgba(0,0,0,.16)}
 .credit{margin-top:16px;font-size:12px;color:rgba(255,255,255,.55)}
 
@@ -91,21 +80,8 @@ h1{font-family:'Lalezar';font-size:clamp(46px,9vw,78px);color:var(--gold);text-a
 .stat{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.2);padding:6px 13px;border-radius:999px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
 .stat b{font-family:'Lalezar';color:var(--gold);font-size:19px;font-weight:400}
 #streak{display:none;background:#ff5a2e22;border-color:#ff8a5e}
-
-/* 👀 نوار مرحله‌ی به‌خاطر سپردن */
-.chipRow{display:flex;flex-direction:column;align-items:center;gap:7px;margin:4px auto 2px}
-.lvlChip{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.22);padding:4px 18px;border-radius:999px;font-family:'Lalezar';font-size:17px;color:#ffe9a8}
-.pvChip{display:none;align-items:center;gap:10px;background:linear-gradient(#ffe168,#ffc93f);color:#4a3400;font-weight:800;font-size:15px;
-  padding:7px 16px;border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
-.pvChip.show{display:inline-flex;animation:popIn .4s cubic-bezier(.3,1.6,.5,1)}
-.pvChip b{font-family:'Lalezar';font-size:27px;line-height:1;min-width:28px;text-align:center;display:inline-block}
-.pvChip b.pop{animation:countPop .45s cubic-bezier(.3,1.8,.5,1)}
-@keyframes countPop{0%{transform:scale(1.9);color:#d94036}100%{transform:scale(1)}}
-#btnSkip{border:none;background:#4a3400;color:#ffe9a8;border-radius:999px;padding:5px 12px;font-weight:800;font-size:12px;cursor:pointer;transition:.2s}
-#btnSkip:hover{transform:translateY(-2px)}
-.pvBarWrap{display:none;width:min(680px,94vw);height:8px;border-radius:99px;background:rgba(0,0,0,.3);overflow:hidden;border:1px solid rgba(255,255,255,.15)}
-.pvBarWrap.show{display:block}
-.pvBarWrap i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ffe168,#ffb703);border-radius:99px}
+.lvlChip{display:block;width:max-content;margin:4px auto 2px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.22);
+  padding:4px 18px;border-radius:999px;font-family:'Lalezar';font-size:17px;color:#ffe9a8}
 
 .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(9px,1.7vw,16px);width:min(680px,94vw);margin:12px auto 44px;perspective:1200px}
 @media (max-width:560px){.board{grid-template-columns:repeat(3,1fr)}}
@@ -117,7 +93,7 @@ h1{font-family:'Lalezar';font-size:clamp(46px,9vw,78px);color:var(--gold);text-a
 .card:not(.flipped):not(.matched):hover{transform:translateY(-6px)}
 .card:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:16px}
 .cardInner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,1.35,.6,1)}
-.card.flipped .cardInner,.card.matched .cardInner,.card.peek .cardInner,.card.preview .cardInner{transform:rotateY(180deg)}
+.card.flipped .cardInner,.card.matched .cardInner,.card.peek .cardInner{transform:rotateY(180deg)}
 .card.wrong .cardInner{animation:shake .5s}
 @keyframes shake{20%{transform:rotateY(180deg) translateX(-8px)}40%{transform:rotateY(180deg) translateX(8px)}60%{transform:rotateY(180deg) translateX(-6px)}80%{transform:rotateY(180deg) translateX(5px)}}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 6px;overflow:hidden}
@@ -227,16 +203,7 @@ h1{font-family:'Lalezar';font-size:clamp(46px,9vw,78px);color:var(--gold);text-a
     </button>
   </div>
 
-  <div class="pvSet">
-    <span class="pvLabel">👀 زمان نمایش کارت‌ها در شروع بازی:</span>
-    <div class="pvOpts">
-      <button class="pvOpt" data-sec="5">۵ ثانیه</button>
-      <button class="pvOpt on" data-sec="10">۱۰ ثانیه</button>
-      <button class="pvOpt" data-sec="15">۱۵ ثانیه</button>
-    </div>
-  </div>
-
-  <p class="howto">🎯 اولِ بازی همه‌ی کارت‌ها چند ثانیه رو می‌شوند تا آن‌ها را به خاطر بسپاری، بعد برمی‌گردند. حالا هر کارتِ <b>«سؤال»</b> (آبی) را پیدا کن و کارتِ <b>«جواب»</b> (نارنجی) درستش را کنارش بگذار. جفت‌های درست امتیاز می‌دهند و اگر پشت‌سرهم درست جواب بدهی جایزه می‌گیری! 💡 دکمه‌ی راهنما هم کارت‌ها را یک لحظه نشان می‌دهد.</p>
+  <p class="howto">🎯 روی کارت‌ها بزن تا برگردند. هر کارتِ <b>«سؤال»</b> (آبی) را پیدا کن و کارتِ <b>«جواب»</b> (نارنجی) درستش را کنارش بگذار. جفت‌های درست امتیاز می‌دهند و اگر پشت‌سرهم درست جواب بدهی جایزه می‌گیری! 💡 دکمه‌ی راهنما کارت‌ها را یک لحظه نشان می‌دهد.</p>
   <p class="credit">ساخته‌شده با ❤ برای تمرین جمع کسرها</p>
 </section>
 
@@ -251,13 +218,7 @@ h1{font-family:'Lalezar';font-size:clamp(46px,9vw,78px);color:var(--gold);text-a
     <button class="btn btn-ghost" id="btnHint" style="padding:8px 14px;font-size:13px">💡 راهنما ×<span id="hints">۲</span></button>
     <button class="iconBtn" id="btnSound" title="صدا">🔊</button>
   </header>
-  <div class="chipRow">
-    <span class="lvlChip" id="lvlChip"></span>
-    <span class="pvChip" id="pvChip">👀 به خاطر بسپار! <b id="pvCount">۱۰</b> ثانیه
-      <button id="btnSkip">پرش ⏭</button>
-    </span>
-    <span class="pvBarWrap" id="pvBarWrap"><i id="pvBar"></i></span>
-  </div>
+  <span class="lvlChip" id="lvlChip"></span>
   <div id="board" class="board"></div>
 </section>
 </main>
@@ -292,9 +253,6 @@ const PRAISE=['آفرین! 👏','عالی بود! ⭐','درسته! 🎯','ای
 const OOPS=['اوه! دوباره فکر کن 🤔','این نبود! 🙈','نزدیک بود! 😉','یه بار دیگه! 💪'];
 const LVL_NAMES={1:'سطح ۱ • کسرهای هم‌مخرج',2:'سطح ۲ • حاصل، یک یا بیشتر!',3:'سطح ۳ • عددهای مخلوط'};
 
-/* ⏱ زمان نمایش کارت‌ها (از منو انتخاب می‌شود) */
-let previewSec=10;
-
 /* ================ صدا ================ */
 let ac=null,muted=false;
 function tone(f,delay=0,dur=.15,type='sine',vol=.18){
@@ -313,9 +271,7 @@ const SFX={
   match:()=>{tone(660,0,.12,'sine',.2);tone(880,.12,.2,'sine',.2);},
   wrong:()=>{tone(210,0,.18,'sawtooth',.1);tone(150,.13,.25,'sawtooth',.1);},
   win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i*.14,.24,'triangle',.2)),
-  hint:()=>tone(980,0,.1,'sine',.12),
-  tick:()=>tone(560,0,.05,'sine',.07),
-  go:()=>tone(880,0,.14,'triangle',.15)
+  hint:()=>tone(980,0,.1,'sine',.12)
 };
 
 /* ================ رسم کسر ================ */
@@ -403,61 +359,34 @@ function ariaOf(c){
 let state={deck:null};
 
 function startGame(level){
-  clearInterval(state.timerId);clearInterval(state.pvTimer);
+  clearInterval(state.timerId);
   $('#winOverlay').classList.remove('show');
-  state={level,deck:buildDeck(level),flipped:[],lock:true,lockAt:0,previewing:false,moves:0,score:0,matched:0,streak:0,hints:2,time:0};
+  state={level,deck:buildDeck(level),flipped:[],lock:false,lockAt:0,moves:0,score:0,matched:0,streak:0,hints:2,time:0};
   $('#lvlChip').textContent=LVL_NAMES[level];
-  $('#time').textContent='۰۰:۰۰';
   renderBoard();updateHUD();
+  $('#time').textContent='۰۰:۰۰';
+  state.timerId=setInterval(()=>{state.time++;$('#time').textContent=fmt(state.time);},1000);
   showScreen('game');
-  startPreview();               /* 👀 اول کارت‌ها نمایش داده می‌شوند */
 }
 
-/* ---------- مرحله‌ی به‌خاطر سپردن ---------- */
-function startPreview(){
-  state.previewing=true;state.lock=true;state.lockAt=Date.now();
-  document.querySelectorAll('#board .card').forEach(e=>e.classList.add('preview'));
-  $('#lvlChip').classList.add('hidden');
-  $('#pvChip').classList.add('show');
-  $('#pvBarWrap').classList.add('show');
-  let t=previewSec;
-  $('#pvCount').textContent=toFa(t);
-  const bar=$('#pvBar');
-  bar.style.transition='none';bar.style.width='100%';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    bar.style.transition=`width ${previewSec}s linear`;bar.style.width='0%';
-  }));
-  state.pvTimer=setInterval(()=>{
-    t--;
-    if(t<=0){clearInterval(state.pvTimer);endPreview();return;}
-    const pc=$('#pvCount');
-    pc.textContent=toFa(t);
-    pc.classList.remove('pop');void pc.offsetWidth;pc.classList.add('pop');
-    SFX.tick();
-  },1000);
-}
-function endPreview(){
-  if(!state||!state.previewing)return;
-  state.previewing=false;
-  clearInterval(state.pvTimer);
-  $('#pvChip').classList.remove('show');
-  $('#pvBarWrap').classList.remove('show');
-  $('#lvlChip').classList.remove('hidden');
-  SFX.go();
-  const cards=[...document.querySelectorAll('#board .card.preview')];
-  cards.forEach((e,i)=>setTimeout(()=>e.classList.remove('preview'),i*45));  /* یکی‌یکی برمی‌گردند */
-  setTimeout(()=>{
-    state.lock=false;
-    state.timerId=setInterval(()=>{state.time++;$('#time').textContent=fmt(state.time);},1000);
-  },cards.length*45+450);
-}
-function cleanupPreview(){
-  clearInterval(state.pvTimer);
-  if(!state)return;
-  state.previewing=false;
-  $('#pvChip').classList.remove('show');
-  $('#pvBarWrap').classList.remove('show');
-  $('#lvlChip').classList.remove('hidden');
+function renderBoard(){
+  const b=$('#board');b.innerHTML='';
+  state.deck.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='card';
+    el.dataset.kind=c.kind;
+    el.dataset.idx=i;          /* ✅ شماره‌ی کارت ذخیره می‌شود */
+    el._card=c;                /* ✅ اطلاعات کارت مستقیم روی خود کارت */
+    el.tabIndex=0;el.setAttribute('role','button');
+    el.setAttribute('aria-label',ariaOf(c));
+    el.style.setProperty('--d',(Math.random()*3).toFixed(2)+'s');
+    el.innerHTML=`<div class="cardInner">
+      <div class="face back">${pieSVG(3,4,30,'#ffd23f')}<span class="qm">؟</span><span class="bTxt">کارتِ کسری</span></div>
+      <div class="face front">${cardFace(c)}</div></div>`;
+    el.addEventListener('click',()=>onCard(el));
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onCard(el);}});
+    b.appendChild(el);
+  });
 }
 
 function updateHUD(){
@@ -471,6 +400,7 @@ function updateHUD(){
   else st.style.display='none';
 }
 
+/* ✅ قفل‌شکن خودکار: اگر بازی به هر دلیلی گیر کرد، بعد از ۲.۵ ثانیه آزاد می‌شود */
 function forceUnlock(){
   (state.flipped||[]).forEach(e=>e.classList.remove('flipped','wrong','peek'));
   state.flipped=[];state.lock=false;
@@ -478,7 +408,6 @@ function forceUnlock(){
 
 function onCard(el){
   if(!state.deck)return;
-  if(state.previewing)return;            /* 👀 در مرحله‌ی نمایش، کلیک غیرفعال است */
   if(state.lock){
     if(Date.now()-state.lockAt>2500)forceUnlock(); else return;
   }
@@ -494,7 +423,7 @@ function onCard(el){
   const [x,y]=state.flipped;
 
   setTimeout(()=>{
-    const cx=x._card, cy=y._card;
+    const cx=x._card, cy=y._card;   /* ✅ خواندن مستقیم اطلاعات کارت */
     if(cx && cy && cx.pair===cy.pair){
       x.classList.remove('flipped');y.classList.remove('flipped');
       x.classList.add('matched');y.classList.add('matched');
@@ -517,7 +446,7 @@ function onCard(el){
 }
 
 function useHint(){
-  if(!state.deck||state.previewing||state.lock||state.hints<=0||state.matched===6)return;
+  if(!state.deck||state.lock||state.hints<=0||state.matched===6)return;
   state.hints--;state.score=Math.max(0,state.score-15);
   state.lock=true;state.lockAt=Date.now();
   SFX.hint();updateHUD();
@@ -581,13 +510,7 @@ function showScreen(id){
   $('#'+id).classList.add('active');
 }
 document.querySelectorAll('.deck').forEach(d=>d.addEventListener('click',()=>startGame(+d.dataset.level)));
-document.querySelectorAll('.pvOpt').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.pvOpt').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');previewSec=+b.dataset.sec;
-  tone(700,0,.06,'sine',.1);
-}));
-$('#btnSkip').addEventListener('click',endPreview);
-$('#btnHome').addEventListener('click',()=>{cleanupPreview();clearInterval(state.timerId);showScreen('menu');});
+$('#btnHome').addEventListener('click',()=>{clearInterval(state.timerId);showScreen('menu');});
 $('#btnHint').addEventListener('click',useHint);
 $('#btnAgain').addEventListener('click',()=>startGame(state.level));
 $('#btnNext').addEventListener('click',()=>startGame(state.level+1));
