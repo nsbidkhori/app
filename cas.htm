@@ -1,1 +1,597 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#1b2255">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231b2255'/><text x='50' y='70' font-size='55' text-anchor='middle'>🚀</text></svg>">
+<link rel="manifest" href='data:application/manifest+json,{"name":"کهکشان ضرب","short_name":"کهکشان ضرب","start_url":".","display":"standalone","background_color":"%2310153a","theme_color":"%231b2255","icons":[{"src":"data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><rect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%231b2255%27/><text x=%2750%27 y=%2770%27 font-size=%2755%27 text-anchor=%27middle%27>🚀</text></svg>","sizes":"any","type":"image/svg+xml"}]}'>
+<title>کهکشان ضرب | بازی ضرب پایه چهارم</title>
+<style>
+:root{
+  --bg1:#10153a;--bg2:#251b5e;--deep:#131042;
+  --card:#fffdf6;--ink:#23264f;
+  --star:#ffd23f;--coral:#ff6b5e;--teal:#35e0c8;--org:#ff9f1c;--grape:#8a5cf5;--leaf:#4ade80;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Vazirmatn','IRANSans','Segoe UI',Tahoma,Arial,sans-serif;
+  color:#fff;min-height:100vh;overflow-x:hidden;user-select:none;
+  background:
+    radial-gradient(1100px 700px at 85% -10%,rgba(120,90,255,.35) 0%,transparent 60%),
+    radial-gradient(900px 650px at -10% 108%,rgba(40,130,220,.30) 0%,transparent 55%),
+    linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,var(--deep) 100%);
+  background-attachment:fixed;
+}
+button{font-family:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 
+/* ===== پس‌زمینه فضایی ===== */
+.tw{position:fixed;border-radius:50%;background:#fff;z-index:0;pointer-events:none;animation:twinkle ease-in-out infinite}
+.neb{position:fixed;border-radius:50%;filter:blur(6px);z-index:0;pointer-events:none;animation:drift 16s ease-in-out infinite alternate}
+.meteor{position:fixed;width:110px;height:3px;border-radius:3px;z-index:0;pointer-events:none;opacity:0;
+  background:linear-gradient(-90deg,#fff,transparent);animation:shoot 7s linear infinite}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.25)}}
+@keyframes drift{to{transform:translate(24px,-18px) scale(1.06)}}
+@keyframes shoot{0%{opacity:0;transform:translate(30vw,-8vh) rotate(-32deg)}4%{opacity:.9}12%{opacity:0;transform:translate(-28vw,44vh) rotate(-32deg)}100%{opacity:0;transform:translate(-28vw,44vh) rotate(-32deg)}}
+
+/* ===== چیدمان ===== */
+.app{position:relative;z-index:2;max-width:560px;margin:0 auto;padding:16px 14px 90px}
+.screen{display:none}
+.screen.active{display:block;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.grad-text{background:linear-gradient(#ffe98a,#ffb02e);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-size:clamp(2.4rem,9vw,3.4rem);font-weight:900;line-height:1.15;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.sub{font-weight:700;opacity:.92;margin-top:6px}
+.center{text-align:center}
+
+/* ===== دکمه‌ها ===== */
+.btn{font-size:clamp(1.15rem,4.5vw,1.45rem);font-weight:900;padding:.6em 1.8em;border:none;cursor:pointer;
+  border-radius:999px;color:#3d2a00;background:linear-gradient(#ffe18a,#ffbf3f);
+  box-shadow:0 6px 0 #c67f00,0 12px 22px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #c67f00}
+.btn.big{font-size:clamp(1.4rem,6vw,1.9rem);padding:.6em 2.2em;animation:bob 2.2s ease-in-out infinite}
+.btn.ghost{background:rgba(255,255,255,.12);color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.35)}
+.btn.small{font-size:1rem;padding:.4em 1.3em}
+
+/* ===== اسپلش ===== */
+.splash-rocket{font-size:4.6rem;display:inline-block;animation:rocketFly 3s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(0,0,0,.4))}
+@keyframes rocketFly{0%,100%{transform:translateY(0) rotate(-45deg)}50%{transform:translateY(-18px) rotate(-45deg)}}
+.pill-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+.pill{font-size:.85rem;font-weight:800;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.28);
+  border-radius:999px;padding:4px 14px}
+.install{margin:22px auto 0;max-width:440px;background:rgba(255,255,255,.08);border:2px dashed rgba(255,255,255,.35);
+  border-radius:18px;padding:12px 16px;font-size:.9rem;line-height:2}
+.install summary{font-weight:900;cursor:pointer}
+.install p{margin-top:6px;opacity:.92}
+#installBtn{margin-top:10px}
+
+/* ===== نقشه سیاره‌ها ===== */
+.map-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.map-head h2{font-size:clamp(1.5rem,6vw,2rem);font-weight:900}
+.stat-chip{font-weight:900;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);
+  border-radius:999px;padding:4px 14px;font-size:.95rem}
+.planet-list{position:relative;display:flex;flex-direction:column;gap:22px;padding:8px 0}
+.planet-list::before{content:'';position:absolute;top:30px;bottom:30px;right:47px;border-right:4px dashed rgba(255,255,255,.25)}
+.p-row{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+.planet{width:96px;height:96px;flex:0 0 96px;border-radius:50%;position:relative;cursor:pointer;border:none;
+  animation:bob 3.4s ease-in-out infinite;transition:transform .15s;
+  box-shadow:inset -16px -16px 0 rgba(0,0,0,.22),0 0 0 5px rgba(255,255,255,.12),0 12px 24px rgba(0,0,0,.45)}
+.planet:active{transform:scale(.92)}
+.planet::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:
+   radial-gradient(circle at 68% 30%,rgba(255,255,255,.5) 0 7%,transparent 8%),
+   radial-gradient(circle at 30% 62%,rgba(0,0,0,.18) 0 9%,transparent 10%),
+   radial-gradient(circle at 62% 74%,rgba(0,0,0,.15) 0 6%,transparent 7%)}
+.p1{background:radial-gradient(circle at 32% 30%,#8ff5e4,#18b7a5 62%,#0b7d72)}
+.p2{background:radial-gradient(circle at 32% 30%,#ffd993,#ff9f1c 62%,#c96f00);animation-delay:.4s}
+.p3{background:radial-gradient(circle at 32% 30%,#ffa89b,#ff6b5e 62%,#b93a3a);animation-delay:.8s}
+.p4{background:radial-gradient(circle at 32% 30%,#c4b0ff,#8a5cf5 62%,#4f2da8);animation-delay:1.2s}
+.p4::before{content:'';position:absolute;left:-24px;right:-24px;top:50%;height:30px;margin-top:-15px;
+  border:5px solid rgba(255,220,130,.65);border-radius:50%;transform:rotate(-16deg)}
+.planet .lock{position:absolute;inset:0;display:grid;place-items:center;font-size:1.9rem;z-index:2}
+.planet.locked{filter:grayscale(.85) brightness(.7);cursor:not-allowed;animation:none}
+.p-info{flex:1;background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.22);border-radius:20px;padding:12px 16px}
+.p-info h3{font-size:1.15rem;font-weight:900}
+.p-info .p-sub{font-size:.85rem;opacity:.85;margin:2px 0 6px}
+.p-stars{font-size:1.05rem;letter-spacing:3px}
+.p-stars b{color:var(--star);text-shadow:0 2px 0 rgba(0,0,0,.4);font-weight:400}
+.p-stars i{color:rgba(255,255,255,.28);font-style:normal}
+.p-badge{font-size:.8rem;font-weight:900;background:var(--leaf);color:#083318;border-radius:999px;padding:2px 12px;margin-inline-start:8px}
+.p-badge.gray{background:rgba(255,255,255,.25);color:#fff}
+
+/* ===== HUD بازی ===== */
+.hud{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.hud .grow{flex:1;text-align:center;font-weight:900;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:4px 10px}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12);font-size:1.15rem;cursor:pointer;transition:.15s}
+.icon-btn:active{transform:scale(.88)}
+.hearts{display:flex;gap:2px;font-size:1.35rem}
+.heart{transition:.3s;display:inline-block}
+.heart.lost{filter:grayscale(1);opacity:.35;transform:scale(.75)}
+.heart.hit{animation:shake .45s}
+.streak-chip{font-weight:900;background:rgba(255,120,60,.2);border:2px solid rgba(255,150,80,.55);
+  border-radius:999px;padding:4px 12px;font-size:.95rem;animation:popIn .4s}
+
+/* ===== کارت سؤال ===== */
+.q-card{background:var(--card);color:var(--ink);border-radius:26px;padding:18px 16px 20px;
+  box-shadow:0 12px 0 rgba(0,0,0,.35),0 22px 40px rgba(0,0,0,.35);transition:border-color .2s,box-shadow .2s;border:4px solid transparent}
+.q-card.ok{border-color:var(--leaf);box-shadow:0 12px 0 rgba(0,0,0,.35),0 0 0 8px rgba(74,222,128,.25)}
+.q-card.bad{border-color:var(--coral);animation:shake .45s}
+.q-top{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:.9rem;opacity:.85;margin-bottom:6px}
+.problem{font-size:clamp(2.6rem,11vw,3.8rem);font-weight:900;text-align:center;margin:6px 0 14px;letter-spacing:1px}
+.problem .qm{color:var(--grape);animation:bob 1.6s ease-in-out infinite;display:inline-block}
+.tbar{height:14px;border-radius:999px;background:#e9e6f7;overflow:hidden;margin-bottom:16px}
+.tfill{height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#35e0c8,#4ade80);transition:width .1s linear}
+.tfill.danger{background:linear-gradient(90deg,#ff6b5e,#ff9f1c);animation:blinkD .5s ease-in-out infinite alternate}
+@keyframes blinkD{to{opacity:.6}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{font-size:clamp(1.5rem,6.5vw,2rem);font-weight:900;padding:.65em 0;background:#fff;color:var(--ink);
+  border:3px solid var(--ink);border-radius:18px;cursor:pointer;box-shadow:0 5px 0 rgba(35,38,79,.55);transition:.15s}
+.opt:hover{transform:translateY(-3px)}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(35,38,79,.55)}
+.opt.correct{background:#4ade80;border-color:#14683a;color:#06281a;animation:popIn .4s}
+.opt.wrong{background:#ff6b5e;border-color:#8f1f1f;color:#fff;animation:shake .45s}
+.opt:disabled{cursor:default}
+.hint{margin-top:14px;background:#fff6dd;border:3px dashed #e0a800;border-radius:16px;padding:10px 14px;
+  font-weight:800;font-size:.95rem;line-height:2;color:#5c4300;animation:popIn .4s}
+
+/* ===== موشک پیشرفت ===== */
+.progress-wrap{margin-top:20px}
+.track{position:relative;height:16px;border-radius:999px;background:rgba(255,255,255,.14);
+  border:2px solid rgba(255,255,255,.25)}
+.tfill2{position:absolute;top:2px;bottom:2px;right:2px;width:0;border-radius:999px;
+  background:linear-gradient(270deg,#35e0c8,#ffd23f);transition:width .5s cubic-bezier(.34,1.4,.64,1)}
+.rocket{position:absolute;top:50%;right:0;font-size:1.9rem;transform:translate(50%,-58%) rotate(225deg);
+  transition:right .5s cubic-bezier(.34,1.4,.64,1);filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.goal{position:absolute;left:-6px;top:50%;transform:translateY(-60%);font-size:1.4rem}
+
+/* ===== شناور امتیاز ===== */
+.float-pt{position:fixed;z-index:85;font-weight:900;font-size:1.4rem;color:var(--leaf);
+  text-shadow:0 2px 0 rgba(0,0,0,.5);pointer-events:none;animation:floatUp1 .95s ease-out forwards}
+@keyframes floatUp1{to{transform:translateY(-70px);opacity:0}}
+
+/* ===== پنجره‌ها ===== */
+.ov{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(8,10,30,.75);padding:16px}
+.ov.show{display:grid}
+.ov-card{background:var(--card);color:var(--ink);border-radius:28px;text-align:center;padding:26px 20px;
+  max-width:400px;width:100%;box-shadow:0 16px 0 rgba(0,0,0,.4);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.ov-card h2{font-size:clamp(1.6rem,6vw,2.1rem);font-weight:900;margin-bottom:4px}
+.ov-card p{font-weight:700;line-height:2;margin:6px 0 14px}
+.ov-stars{font-size:3rem;display:flex;gap:12px;justify-content:center;margin:8px 0}
+.ov-stars span{color:#dcd9ec;display:inline-block}
+.ov-stars span.on{color:var(--star);text-shadow:0 3px 0 rgba(0,0,0,.15);animation:starPop .6s backwards}
+.ov-score{font-weight:900;background:#fff3cf;border:3px solid #e0a800;border-radius:999px;display:inline-block;padding:4px 22px;margin-bottom:14px}
+.ov-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.big-emoji{font-size:4rem;display:inline-block;animation:bob 2s infinite}
+.trophy{font-size:4.6rem;display:inline-block;animation:rocketFly 2.6s infinite}
+
+/* ===== افکت انفجار ستاره ===== */
+.fx{position:fixed;z-index:80;font-size:22px;pointer-events:none;animation:fly .95s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rr)) scale(.3);opacity:0}}
+
+/* ===== انیمیشن‌های عمومی ===== */
+@keyframes popIn{0%{transform:scale(.65);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes starPop{0%{transform:scale(0)}60%{transform:scale(1.5)}100%{transform:scale(1)}}
+@keyframes blinkSide{50%{opacity:.4}}
+
+@media (max-width:380px){
+  .planet{width:80px;height:80px;flex-basis:80px}
+  .planet-list::before{right:39px}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ======= صفحه شروع ======= -->
+  <section class="screen active center" id="scrSplash">
+    <div style="padding-top:8vh">
+      <span class="splash-rocket">🚀</span>
+      <h1 class="grad-text">کهکشان ضرب</h1>
+      <p class="sub">بازی جدول ضرب • مخصوص پایه‌ی چهارم دبستان</p>
+      <div class="pill-row">
+        <span class="pill">🪐 ۴ سیاره</span>
+        <span class="pill">❤️ سه جان</span>
+        <span class="pill">⭐ ستاره جمع کن</span>
+        <span class="pill">🔥 بدون اینترنت</span>
+      </div>
+      <div style="margin-top:26px">
+        <button class="btn big" id="startBtn">شروع بازی ▶</button>
+      </div>
+      <button class="btn ghost small" id="installBtn" hidden>📲 نصب روی گوشی</button>
+      <details class="install">
+        <summary>📲 نصب روی گوشی و اجرا در شاد</summary>
+        <p>
+          ۱) این فایل را در مرورگر گوشی (کروم) باز کن.<br>
+          ۲) منوی ⋮ را بزن و «افزودن به صفحه اصلی» یا «نصب برنامه» را انتخاب کن.<br>
+          ۳) در <b>شاد</b>: همین فایل را دریافت و باز کن؛ بازی بدون اینترنت اجرا می‌شود ✅
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======= نقشه سیاره‌ها ======= -->
+  <section class="screen" id="scrMap">
+    <div class="map-head">
+      <h2 class="grad-text">🪐 نقشه‌ی کهکشان</h2>
+      <span class="stat-chip" id="mapStars">⭐ ۰ از ۱۲</span>
+      <button class="icon-btn" id="sndBtnMap" title="صدا">🔊</button>
+    </div>
+    <div class="planet-list" id="planetList"></div>
+    <p class="center sub" style="margin-top:18px;font-size:.9rem;opacity:.85">
+      هر سیاره را پاک‌سازی کن تا سیاره‌ی بعدی باز شود! 🔓
+    </p>
+  </section>
+
+  <!-- ======= صفحه بازی ======= -->
+  <section class="screen" id="scrGame">
+    <div class="hud">
+      <button class="icon-btn" id="backBtn">🗺️</button>
+      <span class="grow" id="lvlName">سیاره</span>
+      <span class="hearts" id="heartsBox"></span>
+      <span class="stat-chip" id="scoreChip">💎 ۰</span>
+    </div>
+    <div class="hud" id="qMeta" style="margin-top:-4px">
+      <span class="grow" id="qNum" style="font-size:.9rem">سؤال ۱ از ۸</span>
+      <span class="streak-chip" id="streakChip" hidden>🔥 زنجیره ×۲</span>
+    </div>
+    <div class="q-card" id="qCard">
+      <div class="problem" id="problem"></div>
+      <div class="tbar"><div class="tfill" id="tfill"></div></div>
+      <div class="opts" id="opts"></div>
+      <div class="hint" id="hintBox" hidden></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="track">
+        <div class="tfill2" id="tfill2"></div>
+        <span class="goal">🏁</span>
+        <span class="rocket" id="rocket">🚀</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= قهرمانی ======= -->
+  <section class="screen center" id="scrWin">
+    <div style="padding-top:9vh">
+      <span class="trophy">🏆</span>
+      <h1 class="grad-text">قهرمان ضرب!</h1>
+      <p class="sub">تو همه‌ی سیاره‌ها را فتح کردی؛<br>جدول ضرب دیگر برایت مثل آب خوردن است! 🎉</p>
+      <div class="pill-row" id="winStats"></div>
+      <div style="margin-top:26px">
+        <button class="btn big" id="winBtn">دیدن نقشه 🪐</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======= پنجره پایان مرحله ======= -->
+<div class="ov" id="ovClear"><div class="ov-card">
+  <h2 id="clTitle">سیاره فتح شد! 🎉</h2>
+  <div class="ov-stars" id="clStars"><span>★</span><span>★</span><span>★</span></div>
+  <div><span class="ov-score" id="clScore">💎 ۰ امتیاز</span></div>
+  <p id="clMsg"></p>
+  <div class="ov-btns"><button class="btn" id="btnContinue">ادامه‌ی سفر ▶</button></div>
+</div></div>
+
+<!-- ======= پنجره باخت ======= -->
+<div class="ov" id="ovFail"><div class="ov-card">
+  <span class="big-emoji">🛸</span>
+  <h2>سفینه آسیب دید!</h2>
+  <p>اشکالی ندارد؛ هر قهرمانی چند بار تمرین می‌کند. دوباره امتحان کن! 💪</p>
+  <div class="ov-btns">
+    <button class="btn" id="btnRetry">تلاش دوباره ↺</button>
+    <button class="btn ghost" id="btnFailMap" style="color:var(--ink);border-color:var(--ink);box-shadow:0 5px 0 rgba(35,38,79,.4)">نقشه 🗺️</button>
+  </div>
+</div></div>
+
+<script>
+/* ================= ابزارها ================= */
+const $=s=>document.querySelector(s);
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ================= پس‌زمینه ستاره‌ای ================= */
+(function(){
+  for(let i=0;i<42;i++){
+    const s=document.createElement('div');s.className='tw';
+    const sz=(Math.random()*2.4+1.2).toFixed(1);
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+      animation-duration:${(2+Math.random()*3).toFixed(1)}s;animation-delay:${(-Math.random()*4).toFixed(1)}s`;
+    document.body.appendChild(s);
+  }
+  [['18%','12%','160px','rgba(138,92,245,.16)'],['70%','65%','200px','rgba(53,224,200,.10)'],['40%','85%','140px','rgba(255,159,28,.10)']]
+  .forEach(([x,y,s,c],i)=>{
+    const n=document.createElement('div');n.className='neb';
+    n.style.cssText=`left:${x};top:${y};width:${s};height:${s};background:radial-gradient(circle,${c},transparent 70%);animation-delay:${i*-5}s`;
+    document.body.appendChild(n);
+  });
+  const m=document.createElement('div');m.className='meteor';m.style.top='12vh';
+  document.body.appendChild(m);
+})();
+
+/* ================= صدا (بدون فایل خارجی) ================= */
+let AC=null,muted=false;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(AC&&AC.state==='suspended')AC.resume();return AC;}
+function tone(f,t=.12,type='triangle',v=.18,delay=0){
+  if(muted)return;try{const a=ac();if(!a)return;
+    const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+delay;
+    o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t0);
+    g.gain.exponentialRampToValueAtTime(v,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+t);
+    o.connect(g).connect(a.destination);o.start(t0);o.stop(t0+t+.05);}catch(e){}}
+const sfx={
+  click:()=>tone(620,.06,'triangle',.1),
+  good:()=>{tone(523,.12);tone(659,.12,'triangle',.18,.1);tone(784,.2,'triangle',.18,.2);},
+  bad:()=>tone(165,.3,'sawtooth',.1),
+  hurt:()=>{tone(240,.12,'sawtooth',.12);tone(150,.2,'sawtooth',.1,.09);},
+  tick:()=>tone(900,.04,'square',.05),
+  coin:()=>{tone(988,.07,'square',.12);tone(1319,.16,'square',.12,.07);},
+  fanfare:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,.2,'triangle',.2,i*.13));tone(1319,.35,'triangle',.18,.55);}
+};
+function toggleSound(btn){muted=!muted;btn.textContent=muted?'🔇':'🔊';
+  document.querySelectorAll('.icon-btn.snd').forEach(b=>b.textContent=btn.textContent);
+  if(!muted)sfx.click();}
+
+/* ================= افکت ستاره ================= */
+function burst(el,chars=['⭐','✨','💫','🌟'],n=12){
+  try{const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  for(let i=0;i<n;i++){
+    const s=document.createElement('span');s.className='fx';s.textContent=chars[i%chars.length];
+    s.style.left=cx+'px';s.style.top=cy+'px';
+    const a=Math.random()*Math.PI*2,d=60+Math.random()*95;
+    s.style.setProperty('--dx',Math.cos(a)*d+'px');
+    s.style.setProperty('--dy',(Math.sin(a)*d-70)+'px');
+    s.style.setProperty('--rr',(Math.random()*360-180)+'deg');
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
+  }}catch(e){}}
+function floatScore(el,txt){
+  const r=el.getBoundingClientRect(),s=document.createElement('span');
+  s.className='float-pt';s.textContent=txt;
+  s.style.left=(r.left+r.width/2-24)+'px';s.style.top=(r.top)+'px';
+  document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
+}
+
+/* ================= ذخیره ================= */
+let P={stars:[0,0,0,0],unlocked:0};
+try{const d=JSON.parse(localStorage.getItem('galaxy-zarb'));if(d&&d.stars)P=d;}catch(e){}
+function save(){try{localStorage.setItem('galaxy-zarb',JSON.stringify(P));}catch(e){}}
+
+/* ================= سیاره‌ها ================= */
+const LEVELS=[
+  {name:'سیاره‌ی تیر',sub:'ضرب‌های آسان: ۲ تا ۵',cls:'p1',time:20},
+  {name:'سیاره‌ی ناهید',sub:'ضرب‌های سخت‌تر: ۶ تا ۹',cls:'p2',time:20},
+  {name:'سیاره‌ی بهرام',sub:'ضرب‌های قاطی تا ۱۲',cls:'p3',time:22},
+  {name:'سیاره‌ی مشتری',sub:'اعداد بزرگ و دو رقمی',cls:'p4',time:32},
+];
+const QCOUNT=8;
+
+function genLevel(li){
+  const qs=[],seen=new Set();let g=0;
+  while(qs.length<QCOUNT&&g++<500){
+    let a,b;
+    if(li===0){a=ri(2,5);b=ri(2,10);}
+    else if(li===1){a=ri(6,9);b=ri(3,10);}
+    else if(li===2){a=ri(3,12);b=ri(3,12);}
+    else{if(Math.random()<.5){a=ri(12,49);b=ri(3,9);}else{a=ri(12,35);b=ri(11,25);}}
+    const key=Math.min(a,b)+'×'+Math.max(a,b);
+    if(seen.has(key))continue;seen.add(key);
+    qs.push({a,b});
+  }
+  return qs;
+}
+function makeChoices(a,b){
+  const c=a*b,set=new Set([c]);
+  const pool=shuffle([c+a,c-a,c+b,c-b,(a+1)*b,(a-1)*b,a*(b+1),a*(b-1),c+10,c-10,c+20,c-a-b,c+2,c-2]
+    .filter(v=>v>0&&v!==c));
+  for(const v of pool){if(set.size>=4)break;set.add(v);}
+  let k=1;while(set.size<4){set.add(c+k*7+3);k++;}
+  return shuffle([...set]);
+}
+function hint(a,b){
+  const c=a*b;
+  if(b>=10){const t=Math.floor(b/10)*10,u=b%10;
+    if(u===0)return `💡 ${fa(a)} × ${fa(t)} = ${fa(c)} (یک ${fa(b)} کامل، یعنی ${fa(t)} تا!)`;
+    return `💡 ${fa(a)}×${fa(t)} = ${fa(a*t)} و ${fa(a)}×${fa(u)} = ${fa(a*u)} ← حاصل‌جمع: ${fa(c)}`;}
+  if(a>=10){const t=Math.floor(a/10)*10,u=a%10;
+    if(u===0)return `💡 ${fa(t)} × ${fa(b)} = ${fa(c)}`;
+    return `💡 ${fa(t)}×${fa(b)} = ${fa(t*b)} و ${fa(u)}×${fa(b)} = ${fa(u*b)} ← حاصل‌جمع: ${fa(c)}`;}
+  const small=Math.min(a,b),big=Math.max(a,b);
+  return '💡 '+Array(big).fill(fa(small)).join(' + ')+' = '+fa(c);
+}
+
+/* ================= وضعیت بازی ================= */
+const G={level:0,qi:0,hearts:3,mistakes:0,score:0,streak:0,lock:false,qs:[],timerId:null,timeLeft:0,timeTotal:0};
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+
+/* ================= نقشه ================= */
+function renderMap(){
+  const sum=P.stars.reduce((a,b)=>a+b,0);
+  $('#mapStars').textContent=`⭐ ${fa(sum)} از ۱۲`;
+  const box=$('#planetList');box.innerHTML='';
+  LEVELS.forEach((lv,i)=>{
+    const locked=i>P.unlocked,stars=P.stars[i];
+    const starsHtml=[0,1,2].map(k=>k<stars?'<b>★</b>':'<i>★</i>').join('');
+    const row=document.createElement('div');row.className='p-row';
+    row.innerHTML=`
+      <button class="planet ${lv.cls} ${locked?'locked':''}" data-i="${i}">
+        ${locked?'<span class="lock">🔒</span>':''}
+      </button>
+      <div class="p-info">
+        <h3>${lv.name} ${stars===3?'<span class="p-badge">کامل شد ✔</span>':locked?'<span class="p-badge gray">قفل</span>':''}</h3>
+        <div class="p-sub">${lv.sub}</div>
+        <div class="p-stars">${starsHtml}</div>
+      </div>`;
+    box.appendChild(row);
+    row.querySelector('.planet').onclick=()=>{
+      if(locked){sfx.bad();showToast('اول سیاره‌ی قبلی را فتح کن! 🪐');return;}
+      sfx.click();startLevel(i);
+    };
+  });
+}
+let toastT;
+function showToast(t){
+  let el=$('#toast');
+  if(!el){el=document.createElement('div');el.id='toast';
+    el.style.cssText='position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;background:#fff;color:#23264f;font-weight:900;padding:10px 22px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:.3s;opacity:0';
+    document.body.appendChild(el);}
+  el.textContent=t;el.style.opacity=1;
+  clearTimeout(toastT);toastT=setTimeout(()=>el.style.opacity=0,1800);
+}
+
+/* ================= شروع مرحله ================= */
+function startLevel(i){
+  G.level=i;G.qi=0;G.hearts=3;G.mistakes=0;G.streak=0;G.lock=false;
+  G.score=0;G.qs=genLevel(i);
+  $('#lvlName').textContent=`${LEVELS[i].name} 🪐`;
+  renderHearts();updScore();updStreak();updRocket();
+  show('#scrGame');
+  askQuestion();
+}
+function renderHearts(){
+  $('#heartsBox').innerHTML=[0,1,2].map(i=>`<span class="heart ${i<G.hearts?'':'lost'}">❤️</span>`).join('');
+}
+function updScore(){$('#scoreChip').textContent=`💎 ${fa(G.score)}`;}
+function updStreak(){
+  const c=$('#streakChip');
+  if(G.streak>=2){c.hidden=false;c.textContent=`🔥 زنجیره ×${fa(G.streak)}`;}
+  else c.hidden=true;
+}
+function updRocket(){
+  const p=Math.min(100,(G.qi/QCOUNT)*100);
+  $('#tfill2').style.width=p+'%';
+  $('#rocket').style.right=`calc(${p}% )`;
+}
+
+/* ================= سؤال ================= */
+function askQuestion(){
+  G.lock=false;
+  const q=G.qs[G.qi];
+  $('#qNum').textContent=`سؤال ${fa(G.qi+1)} از ${fa(QCOUNT)}`;
+  $('#problem').innerHTML=`${fa(q.a)} × ${fa(q.b)} = <span class="qm">❓</span>`;
+  $('#hintBox').hidden=true;
+  $('#qCard').className='q-card';
+  const opts=$('#opts');opts.innerHTML='';
+  makeChoices(q.a,q.b).forEach(v=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=fa(v);
+    b.onclick=()=>answer(v,q,b);
+    opts.appendChild(b);
+  });
+  updRocket();
+  startTimer(LEVELS[G.level].time);
+}
+function startTimer(sec){
+  clearInterval(G.timerId);
+  G.timeTotal=sec;G.timeLeft=sec;paintTimer();
+  G.timerId=setInterval(()=>{
+    G.timeLeft-=.1;
+    if(G.timeLeft<=0){clearInterval(G.timerId);paintTimer();onTimeout();return;}
+    if(G.timeLeft<4&&Math.abs(G.timeLeft-Math.round(G.timeLeft))<.06)sfx.tick();
+    paintTimer();
+  },100);
+}
+function paintTimer(){
+  const p=Math.max(0,G.timeLeft/G.timeTotal),f=$('#tfill');
+  f.style.width=(p*100)+'%';
+  f.classList.toggle('danger',p<.28);
+}
+
+/* ================= پاسخ ================= */
+function answer(v,q,btn){
+  if(G.lock)return;G.lock=true;clearInterval(G.timerId);
+  const card=$('#qCard');
+  document.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  if(v===q.a*q.b){
+    G.streak++;
+    const bonus=Math.ceil((G.timeLeft/G.timeTotal)*5)+Math.min(G.streak,5)*2;
+    const gained=10+bonus;
+    G.score+=gained;updScore();updStreak();
+    btn.classList.add('correct');card.classList.add('ok');
+    $('#problem').innerHTML=`${fa(q.a)} × ${fa(q.b)} = <span style="color:#14683a">${fa(q.a*q.b)}</span> ✅`;
+    sfx.good();burst(card);floatScore(card,`+${fa(gained)}`);
+    setTimeout(nextStep,950);
+  }else{
+    document.querySelectorAll('.opt').forEach(o=>{if(o.textContent===fa(q.a*q.b))o.classList.add('correct');});
+    if(btn)btn.classList.add('wrong');
+    fail(q);
+  }
+}
+function onTimeout(){
+  if(G.lock)return;G.lock=true;
+  const q=G.qs[G.qi];
+  document.querySelectorAll('.opt').forEach(o=>{o.disabled=true;
+    if(o.textContent===fa(q.a*q.b))o.classList.add('correct');});
+  fail(q);
+}
+function fail(q){
+  G.mistakes++;G.streak=0;G.hearts--;
+  renderHearts();updStreak();
+  const hs=$('#heartsBox').children[G.hearts];if(hs)hs.classList.add('hit');
+  $('#qCard').classList.add('bad');
+  $('#problem').innerHTML=`${fa(q.a)} × ${fa(q.b)} = <span style="color:#8f1f1f">${fa(q.a*q.b)}</span>`;
+  const h=$('#hintBox');h.textContent=hint(q.a,q.b);h.hidden=false;
+  sfx.hurt();
+  if(G.hearts<=0){setTimeout(()=>$('#ovFail').classList.add('show'),1400);}
+  else setTimeout(nextStep,2300);
+}
+function nextStep(){
+  G.qi++;
+  if(G.qi>=QCOUNT){levelClear();}
+  else askQuestion();
+}
+
+/* ================= پایان مرحله ================= */
+function levelClear(){
+  clearInterval(G.timerId);
+  const i=G.level;
+  const stars=G.mistakes===0?3:(G.mistakes<=2?2:1);
+  P.stars[i]=Math.max(P.stars[i],stars);
+  P.unlocked=Math.min(3,Math.max(P.unlocked,i+1));
+  save();updRocket();
+  $('#clTitle').textContent=`${LEVELS[i].name} فتح شد! 🎉`;
+  $('#clScore').textContent=`💎 ${fa(G.score)} امتیاز`;
+  $('#clMsg').textContent=stars===3?'بی‌نقص بود! هیچ اشتباهی نداشتی! 🌟':
+    stars===2?'خیلی خوب بود! با کمی تمرین، سه‌ستاره می‌شوی! 💪':
+    'فتح شد! دوباره تلاش کن تا ستاره‌ی بیشتری بگیری 🌱';
+  const ss=[...$('#clStars').children];
+  ss.forEach(s=>s.classList.remove('on'));
+  $('#ovClear').classList.add('show');
+  ss.forEach((s,k)=>{if(k<stars)setTimeout(()=>{s.classList.add('on');sfx.coin();burst(s,['⭐','✨'],8);},380+k*420);});
+  sfx.fanfare();
+}
+function showWin(){
+  const sum=P.stars.reduce((a,b)=>a+b,0);
+  $('#winStats').innerHTML=`<span class="pill">⭐ ${fa(sum)} ستاره</span><span class="pill">🪐 ۴ سیاره فتح شد</span>`;
+  show('#scrWin');sfx.fanfare();
+  let k=0;const iv=setInterval(()=>{burst(document.body,['🎉','⭐','🌟','✨'],16);if(++k>6)clearInterval(iv);},400);
+}
+
+/* ================= نصب (PWA) ================= */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  const b=$('#installBtn');if(b)b.hidden=false;
+});
+$('#installBtn').onclick=()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$('#installBtn').hidden=true;}};
+
+/* ================= دکمه‌ها ================= */
+$('#startBtn').onclick=()=>{sfx.click();renderMap();show('#scrMap');};
+$('#backBtn').onclick=()=>{sfx.click();clearInterval(G.timerId);renderMap();show('#scrMap');};
+$('#btnContinue').onclick=()=>{sfx.click();$('#ovClear').classList.remove('show');
+  if(G.level===3)showWin();else{renderMap();show('#scrMap');}};
+$('#btnRetry').onclick=()=>{sfx.click();$('#ovFail').classList.remove('show');startLevel(G.level);};
+$('#btnFailMap').onclick=()=>{sfx.click();$('#ovFail').classList.remove('show');renderMap();show('#scrMap');};
+$('#winBtn').onclick=()=>{sfx.click();renderMap();show('#scrMap');};
+$('#sndBtnMap').onclick=function(){toggleSound(this);};
+</script>
+</body>
+</html>
