@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>آزمایشگاه مجازی برق | مدار RLC سری</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{direction:rtl}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;min-height:100vh;
+  background:linear-gradient(180deg,#dfe9f3 0%,#f4f8fb 60%,#e8f0e8 100%);color:#22313f}
+.hidden{display:none!important}
+.topbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  padding:12px 16px;max-width:1200px;margin:0 auto}
+.logo{font-weight:800;font-size:clamp(1.1rem,3.5vw,1.6rem);color:#0b3c5d}
+.logo small{display:block;font-size:.72rem;color:#5a7184;font-weight:600}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{background:#fff;border:2.5px solid #7f8fa6;border-radius:999px;padding:.3rem .9rem;font-weight:800;font-size:.85rem}
+.tbtn{font-family:inherit;font-weight:800;font-size:.95rem;border:none;border-radius:12px;color:#fff;cursor:pointer;
+  padding:.5rem .9rem;min-height:44px;box-shadow:0 4px 0 var(--bd);transition:.15s}
+.tbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--bd)}
+.yellow{--bd:#b26a00;background:#f5a623}.teal{--bd:#0b7271;background:#12a5a4}
+.coral{--bd:#b23a3a;background:#ff6b6b}.green{--bd:#1f8a4c;background:#2ecc71}
+.blue{--bd:#1b4f72;background:#2e86c1}
+
+main{max-width:1200px;margin:0 auto;padding:6px 12px 60px}
+.screen{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}}
+.card{background:#fff;border:3px solid #2c3e50;border-radius:16px;padding:20px;
+  box-shadow:0 8px 0 rgba(44,62,80,.14)}
+.login-card{max-width:520px;margin:8vh auto 0;text-align:center;border-color:#12a5a4}
+.login-card h2{color:#0b3c5d;margin:8px 0}
+#inpName{width:100%;max-width:320px;margin:14px auto;display:block;border:3px solid #2e86c1;border-radius:14px;
+  padding:.8rem 1rem;font-family:inherit;font-weight:700;text-align:center;font-size:1.05rem;outline:none}
+#inpName:focus{border-color:#f5a623;box-shadow:0 0 0 4px rgba(245,166,35,.25)}
+.big-btn{font-family:inherit;font-weight:800;font-size:1.1rem;border:none;border-radius:16px;color:#fff;cursor:pointer;
+  padding:.75rem 1.8rem;min-height:50px;box-shadow:0 5px 0 var(--bd);transition:.15s;margin:4px}
+.big-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--bd)}
+
+.lab{display:grid;grid-template-columns:330px 1fr;gap:14px;align-items:start}
+.panel{background:#fff;border:3px solid #2c3e50;border-radius:16px;padding:14px;box-shadow:0 6px 0 rgba(44,62,80,.12)}
+.panel h3{font-size:1rem;color:#0b3c5d;border-bottom:2px dashed #b8c7d4;padding-bottom:8px;margin-bottom:12px}
+.ctl{margin-bottom:14px}
+.ctl label{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem;color:#34495e;margin-bottom:4px}
+.ctl label b{color:#0b3c5d;background:#eaf3fb;border-radius:8px;padding:0 8px;font-variant-numeric:tabular-nums}
+.ctl input[type=range]{width:100%;accent-color:var(--ac,#2e86c1);height:32px}
+.sws{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.sw{font-family:inherit;font-weight:800;font-size:.82rem;border-radius:999px;padding:.4rem .8rem;cursor:pointer;
+  border:2.5px solid #27ae60;background:#eafaf0;color:#1f8a4c;transition:.15s}
+.sw.off{border-color:#c0392b;background:#fdecea;color:#c0392b}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.seg button{font-family:inherit;font-weight:800;font-size:.85rem;border-radius:12px;padding:.5rem .8rem;cursor:pointer;
+  border:2.5px solid #5a7184;background:#fff;color:#34495e;transition:.15s}
+.seg button.active{background:#0b3c5d;border-color:#0b3c5d;color:#fff}
+.chk{display:flex;gap:8px;align-items:center;font-weight:700;font-size:.85rem;color:#34495e;margin:6px 0}
+
+#circuit{width:100%;height:auto;display:block;background:#f8fbfd;border:2px solid #d5e1ea;border-radius:12px}
+.comp{cursor:pointer}
+.comp.out{opacity:.28}
+canvas{width:100%;height:auto;border-radius:12px;display:block}
+#scope{background:#0b1620;border:2px solid #16324a}
+#phasor{background:#fdfefe;border:2px solid #d5e1ea}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.m{background:#0b1620;color:#7ef0c0;border-radius:10px;padding:8px 10px;font-variant-numeric:tabular-nums}
+.m small{display:block;color:#8fb3c7;font-size:.68rem;font-weight:700}
+.m b{font-size:1.02rem;color:#eafff5}
+.m.warnm b{color:#ffb020}
+#warn{margin-top:10px;font-weight:800;font-size:.88rem;color:#8a5a00;background:#fff8e6;
+  border:2.5px dashed #f5a623;border-radius:12px;padding:8px 12px;line-height:1.9}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.helptxt{font-size:.82rem;color:#5a7184;line-height:2;margin-top:8px}
+
+.results-card pre{white-space:pre-wrap;background:#f4f8fb;border:2px solid #d5e1ea;border-radius:12px;
+  padding:10px;font-family:inherit;font-size:.85rem;line-height:1.9;max-height:300px;overflow:auto;margin-bottom:12px;color:#22313f}
+.overlay-pin{position:fixed;inset:0;background:rgba(20,40,60,.55);z-index:95;display:flex;align-items:center;justify-content:center;padding:16px}
+.pin-card{background:#fff;border:4px solid #7f8fa6;border-radius:24px;padding:24px;max-width:360px;width:100%;text-align:center}
+.pin-card h3{color:#0b3c5d}
+#pinInput{width:180px;margin:14px auto 10px;display:block;border:3px solid #7f8fa6;border-radius:14px;padding:.6rem;
+  text-align:center;font-size:1.2rem;letter-spacing:6px;font-weight:800;outline:none}
+.pin-err{color:#c0392b;font-weight:800;margin-top:8px}
+.toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-90px);background:#0b3c5d;color:#fff;font-weight:800;
+  padding:.7rem 1.4rem;border-radius:999px;z-index:99;transition:.35s;max-width:92vw;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+@media (max-width:900px){.lab{grid-template-columns:1fr}.duo{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<header class="topbar">
+  <div class="logo">⚡ آزمایشگاه مجازی برق — مدار RLC سری
+    <small>آزمایش تعاملی جریان متناوب | فازور، اسکوپ و توان</small></div>
+  <div class="top-actions">
+    <span id="userChip" class="chip hidden">👤 ---</span>
+    <button id="btnTeacher" class="tbtn yellow" title="ورود معلم">🔒 گزارش‌ها</button>
+    <button id="btnExit" class="tbtn coral hidden">🚪 خروج</button>
+  </div>
+</header>
+
+<main>
+  <!-- ورود -->
+  <section id="scr-login" class="screen">
+    <div class="card login-card">
+      <div style="font-size:3.4rem">🧑‍🔬</div>
+      <h2>به آزمایشگاه برق خوش آمدید</h2>
+      <p style="color:#5a7184;font-weight:600;line-height:1.9">برای شروع، نام و نام خانوادگی خود را ثبت کنید.<br>
+      نام شما و خلاصهٔ آزمایش‌هایتان برای معلم ذخیره می‌شود.</p>
+      <input id="inpName" placeholder="نام و نام خانوادگی..." maxlength="40">
+      <button id="btnStart" class="big-btn green">🔌 ورود به آزمایشگاه</button>
+    </div>
+  </section>
+
+  <!-- آزمایشگاه -->
+  <section id="scr-lab" class="screen hidden">
+    <div class="lab">
+      <div>
+        <div class="panel">
+          <h3>🎛 میز کنترل (مقادیر از صفر تا زیاد)</h3>
+          <div class="ctl" style="--ac:#e74c3c"><label>مقاومت R <b><span id="vR">100</span> Ω</b></label>
+            <input type="range" id="sR" min="0" max="1000" step="1" value="100"></div>
+          <div class="ctl" style="--ac:#3498db"><label>اندوکتانس L <b><span id="vL">100</span> mH</b></label>
+            <input type="range" id="sL" min="0" max="500" step="1" value="100"></div>
+          <div class="ctl" style="--ac:#e67e22"><label>ظرفیت C <b><span id="vC">100</span> µF</b></label>
+            <input type="range" id="sC" min="0" max="1000" step="1" value="100"></div>
+          <div class="ctl" style="--ac:#2ecc71"><label>دامنه ولتاژ منبع V <b><span id="vV">10</span> V</b></label>
+            <input type="range" id="sV" min="0" max="100" step="0.5" value="10"></div>
+          <div class="ctl" style="--ac:#8e44ad"><label>فرکانس f <b><span id="vF">50</span> Hz</b></label>
+            <input type="range" id="sF" min="0" max="2000" step="1" value="50"></div>
+          <div class="sws">
+            <button class="sw" id="swR">R در مدار ✓</button>
+            <button class="sw" id="swL">L در مدار ✓</button>
+            <button class="sw" id="swC">C در مدار ✓</button>
+          </div>
+          <p class="helptxt">R=0 یا کلید «خارج» یعنی قطعه با سیم جایگزین شده. C=0 یعنی خازن حذف (سیم). f=0 یعنی منبع DC (خازنِ داخل مدار، جریان را مسدود می‌کند). برای جابه‌جایی قطعه در مدار، روی خود قطعه در شکل هم می‌توانید کلیک کنید.</p>
+        </div>
+        <div class="panel" style="margin-top:14px">
+          <h3>🧭 نوع نمایش برداری / نمودار</h3>
+          <div class="seg" id="seg">
+            <button data-m="V" class="active">ولتاژها</button>
+            <button data-m="Z">امپدانس‌ها</button>
+            <button data-m="P">توان‌ها</button>
+            <button data-m="IV">جریان و ولتاژ</button>
+          </div>
+          <label class="chk"><input type="checkbox" id="rotChk" checked> چرخش فازورها با زمان</label>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h3>🔌 مدار سری RLC</h3>
+          <svg id="circuit" viewBox="0 0 660 340">
+            <path d="M90 70 H570 V270 H90 Z" fill="none" stroke="#445" stroke-width="3"/>
+            <g id="dots"></g>
+            <!-- منبع -->
+            <g class="comp" id="gSrc">
+              <circle cx="90" cy="170" r="26" fill="#fff" stroke="#445" stroke-width="3"/>
+              <g id="srcAC"><path d="M76 170 q7 -14 14 0 q7 14 14 0" fill="none" stroke="#8e44ad" stroke-width="3"/></g>
+              <g id="srcDC" class="hidden"><line x1="78" y1="162" x2="102" y2="162" stroke="#8e44ad" stroke-width="4"/>
+                <line x1="84" y1="178" x2="96" y2="178" stroke="#8e44ad" stroke-width="2.5"/></g>
+              <text x="90" y="215" text-anchor="middle" font-size="15" font-weight="bold" fill="#8e44ad" id="labV">10V</text>
+              <text x="90" y="232" text-anchor="middle" font-size="13" font-weight="bold" fill="#8e44ad" id="labF">50Hz</text>
+            </g>
+            <!-- مقاومت -->
+            <g class="comp" id="gR">
+              <rect x="180" y="58" width="70" height="24" rx="4" fill="#fdecea" stroke="#e74c3c" stroke-width="3"/>
+              <text x="215" y="46" text-anchor="middle" font-size="15" font-weight="bold" fill="#e74c3c" id="labR">100Ω</text>
+              <text x="215" y="102" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#e74c3c" id="labVR">V=0</text>
+            </g>
+            <!-- سلف -->
+            <g class="comp" id="gL">
+              <path d="M310 70 q8 -22 16 0 q8 -22 16 0 q8 -22 16 0 q8 -22 16 0" fill="none" stroke="#3498db" stroke-width="3.5"/>
+              <text x="342" y="46" text-anchor="middle" font-size="15" font-weight="bold" fill="#3498db" id="labL">100mH</text>
+              <text x="342" y="102" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#3498db" id="labVL">V=0</text>
+            </g>
+            <!-- خازن -->
+            <g class="comp" id="gC">
+              <line x1="470" y1="52" x2="470" y2="88" stroke="#e67e22" stroke-width="4"/>
+              <line x1="484" y1="52" x2="484" y2="88" stroke="#e67e22" stroke-width="4"/>
+              <line x1="470" y1="70" x2="484" y2="70" stroke="#445" stroke-width="3" class="hidden" id="cWire"/>
+              <text x="477" y="46" text-anchor="middle" font-size="15" font-weight="bold" fill="#e67e22" id="labC">100µF</text>
+              <text x="477" y="102" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#e67e22" id="labVC">V=0</text>
+            </g>
+            <!-- آمپرسنج -->
+            <g id="gA">
+              <circle cx="330" cy="270" r="22" fill="#fff" stroke="#445" stroke-width="3"/>
+              <text x="330" y="277" text-anchor="middle" font-size="16" font-weight="bold" fill="#22313f">A</text>
+              <text x="330" y="312" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#0b3c5d" id="labI">I=0A</text>
+            </g>
+          </svg>
+          <div id="warn"></div>
+          <div class="actions">
+            <button id="btnRecord" class="big-btn blue">📝 ثبت خلاصهٔ این آزمایش</button>
+            <button id="btnReset" class="big-btn teal">♻ مقادیر پیش‌فرض</button>
+          </div>
+        </div>
+
+        <div class="duo" style="margin-top:14px">
+          <div class="panel"><h3>📈 اسکوپ: موج ولتاژ منبع (سبز) و جریان (زرد)</h3>
+            <canvas id="scope" width="600" height="300"></canvas></div>
+          <div class="panel"><h3 id="phTitle">🧭 نمودار برداری: ولتاژها</h3>
+            <canvas id="phasor" width="600" height="330"></canvas></div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <h3>🔢 اندازه‌گیرهای دیجیتال</h3>
+          <div class="meters">
+            <div class="m"><small>فرکانس f</small><b id="mF">-</b></div>
+            <div class="m"><small>ω رادیان/ثانیه</small><b id="mW">-</b></div>
+            <div class="m"><small>XL اندوکتیو</small><b id="mXL">-</b></div>
+            <div class="m"><small>XC خازنی</small><b id="mXC">-</b></div>
+            <div class="m"><small>Z امپدانس کل</small><b id="mZ">-</b></div>
+            <div class="m"><small>θ زاویه فاز</small><b id="mTh">-</b></div>
+            <div class="m"><small>I جریان (دامنه)</small><b id="mI">-</b></div>
+            <div class="m"><small>I rms مؤثر</small><b id="mIrms">-</b></div>
+            <div class="m"><small>V_R</small><b id="mVR">-</b></div>
+            <div class="m"><small>V_L</small><b id="mVL">-</b></div>
+            <div class="m"><small>V_C</small><b id="mVC">-</b></div>
+            <div class="m"><small>P توان فعال (W)</small><b id="mP">-</b></div>
+            <div class="m"><small>Q توان راکتیو (var)</small><b id="mQ">-</b></div>
+            <div class="m"><small>S توان ظاهری (VA)</small><b id="mS">-</b></div>
+            <div class="m"><small>pf ضریب توان</small><b id="mPf">-</b></div>
+            <div class="m warnm"><small>fr رزونانس</small><b id="mF0">-</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- گزارش معلم -->
+  <section id="scr-teach" class="screen hidden">
+    <div class="card results-card">
+      <h2 style="color:#0b3c5d">🔒 گزارش‌های معلم</h2>
+      <h3 style="margin:12px 0 6px;color:#34495e">👥 کاربران واردشده</h3>
+      <pre id="usersBox"></pre>
+      <h3 style="margin:12px 0 6px;color:#34495e">🧪 خلاصهٔ آزمایش‌های ثبت‌شده</h3>
+      <pre id="expsBox"></pre>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="btnBack" class="big-btn teal">بازگشت ➡</button>
+        <button id="btnClear" class="big-btn coral">🗑 پاک کردن گزارش‌ها</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="overlay-pin hidden" id="pinOverlay">
+  <div class="pin-card">
+    <div style="font-size:2.6rem">🔒</div>
+    <h3>ورود معلم</h3>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="12" placeholder="••••">
+    <div><button id="pinOk" class="big-btn green">ورود</button>
+    <button id="pinCancel" class="big-btn coral">انصراف</button></div>
+    <p id="pinErr" class="pin-err hidden">رمز اشتباه است! ❌</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ===== تنظیمات معلم ===== */
+const TEACHER_PIN='1234';
+const TG_TOKEN='';   // اختیاری: توکن ربات تلگرام
+const TG_CHAT='';    // اختیاری: آیدی چت معلم
+/* ========================= */
+const $=s=>document.querySelector(s);
+const fmt=x=>!isFinite(x)?'∞':(Math.abs(x)>=1000?x.toFixed(0):Math.abs(x)>=10?x.toFixed(1):Math.abs(x)>=0.01?x.toFixed(2):x===0?'0':x.toExponential(1));
+const U={users:'rlcUsersV1',exps:'rlcExpsV1'};
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}};
+const push=(k,v)=>{const a=load(k);a.push(v);try{localStorage.setItem(k,JSON.stringify(a))}catch(e){}};
+function sendTG(t){if(!TG_TOKEN||!TG_CHAT)return;try{fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,
+ {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TG_CHAT,text:t})}).catch(()=>{})}catch(e){}}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+
+const state={R:100,L:100,C:100,V:10,f:50,swR:true,swL:true,swC:true,mode:'V',rotate:true};
+let student='',Q=null,unlocked=false,prevScr='scr-lab';
+
+/* ---------- محاسبه مدار ---------- */
+function compute(){
+  const {R,L,C,V,f,swR,swL,swC}=state;
+  const w=2*Math.PI*f;
+  const Re=swR?R:0, Le=swL?L/1000:0, Ce=swC?C/1e6:0;
+  const XL=w*Le;
+  let XC=0,dcBlock=false;
+  if(Ce>0){ if(w===0){XC=Infinity;dcBlock=true;} else XC=1/(w*Ce); }
+  let I,VR,VL,VC,Z,th,short=false;
+  if(dcBlock){I=0;VR=0;VL=0;VC=V;Z=Infinity;th=-Math.PI/2;}
+  else{
+    const X=XL-XC; Z=Math.hypot(Re,X);
+    if(Z===0){short=true;I=Infinity;VR=VL=VC=0;th=0;}
+    else{I=V/Z;VR=I*Re;VL=I*XL;VC=I*XC;th=Math.atan2(X,Re);}
+  }
+  const Irms=isFinite(I)?I/Math.SQRT2:Infinity, Vrms=V/Math.SQRT2;
+  const X=XL-(isFinite(XC)?XC:XC);
+  const P=isFinite(Irms)?Irms*Irms*Re:Infinity;
+  const Qq=isFinite(Irms)?Irms*Irms*(isFinite(X)?X:0):Infinity;
+  const S=isFinite(Irms)?Vrms*Irms:Infinity;
+  const pf=isFinite(Z)&&Z>0?Math.cos(th):(short?1:0);
+  const f0=(Le>0&&Ce>0)?1/(2*Math.PI*Math.sqrt(Le*Ce)):null;
+  const res=f>0&&isFinite(X)&&Math.abs(XL-XC)<1e-6&&!short;
+  const nature=dcBlock?'DC':!isFinite(X)?'—':X>1e-9?'القایی':X<-1e-9?'خازنی':'اهمی';
+  return {w,Re,Le,Ce,XL,XC,Z,th,I,VR,VL,VC,Irms,P,Q:Qq,S,pf,f0,res,short,dcBlock,nature};
+}
+
+/* ---------- به‌روزرسانی رابط ---------- */
+function refresh(){
+  Q=compute();
+  $('#vR').textContent=state.R;$('#vL').textContent=state.L;$('#vC').textContent=state.C;
+  $('#vV').textContent=state.V;$('#vF').textContent=state.f;
+  $('#labR').textContent=state.swR?state.R+'Ω':'خارج';
+  $('#labL').textContent=state.swL?state.L+'mH':'خارج';
+  $('#labC').textContent=!state.swC?'خارج':(state.C===0?'سیم':state.C+'µF');
+  $('#labV').textContent=state.V+'V';
+  $('#labF').textContent=state.f===0?'DC':state.f+'Hz';
+  $('#srcAC').classList.toggle('hidden',state.f===0);
+  $('#srcDC').classList.toggle('hidden',state.f!==0);
+  $('#labVR').textContent='V='+fmt(Q.VR);$('#labVL').textContent='V='+fmt(Q.VL);$('#labVC').textContent='V='+fmt(Q.VC);
+  $('#labI').textContent='I='+fmt(Q.I)+'A';
+  $('#cWire').classList.toggle('hidden',!(state.C===0||!state.swC));
+  $('#gR').classList.toggle('out',!state.swR||state.R===0);
+  $('#gL').classList.toggle('out',!state.swL||state.L===0);
+  $('#gC').classList.toggle('out',!state.swC||state.C===0);
+  const m=id=>$(id);
+  m('#mF').textContent=state.f===0?'DC':state.f+' Hz';
+  m('#mW').textContent=fmt(Q.w);
+  m('#mXL').textContent=fmt(Q.XL)+' Ω';
+  m('#mXC').textContent=fmt(Q.XC)+' Ω';
+  m('#mZ').textContent=fmt(Q.Z)+' Ω';
+  m('#mTh').textContent=(Q.th*180/Math.PI).toFixed(1)+'°';
+  m('#mI').textContent=fmt(Q.I)+' A';
+  m('#mIrms').textContent=fmt(Q.Irms)+' A';
+  m('#mVR').textContent=fmt(Q.VR)+' V';m('#mVL').textContent=fmt(Q.VL)+' V';m('#mVC').textContent=fmt(Q.VC)+' V';
