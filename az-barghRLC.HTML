@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>آزمایشگاه مجازی برق AC | شبیه‌ساز مدار RLC سری</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Vazirmatn -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Vazirmatn', 'sans-serif'],
+          },
+          colors: {
+            lab: {
+              dark: '#0b1120',
+              panel: '#111827',
+              card: '#1e293b',
+              border: '#334155',
+              accent: '#38bdf8',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e',
+              purple: '#a855f7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: #0b1120;
+      color: #f1f5f9;
+      overflow-x: hidden;
+      /* رفع مشکلات اسکرول در موبایل و تبلت */
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* اسکرول‌بار سفارشی مهندسی */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* استایل اسلایدرها با تاچ تارجت بهینه برای موبایل */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: #334155;
+      border-radius: 999px;
+      outline: none;
+      direction: ltr;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      border: 3px solid #0f172a;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* پس‌زمینه شطرنجی میز آزمایشگاه کوروکودیل */
+    .lab-grid-bg {
+      background-color: #0f172a;
+      background-image: 
+        linear-gradient(to right, rgba(51, 65, 85, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(51, 65, 85, 0.25) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .ltr-num {
+      direction: ltr;
+      unicode-bidi: isolate;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- سیستم اعلان‌های سفارشی (بدون استفاده از alert) -->
+  <div id="toast-container" class="fixed top-4 left-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- صفحه ورود دانش‌آموز (Modal تمام‌صفحه اولیه با واکنش‌گرایی موبایل) -->
+  <div id="login-screen" class="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-md w-full p-5 sm:p-8 shadow-2xl relative overflow-hidden my-auto">
+      <!-- نوار رنگی بالای کارت -->
+      <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-l from-sky-400 via-emerald-400 to-indigo-500"></div>
+      
+      <div class="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400 mx-auto mb-4 sm:mb-5 shadow-inner">
+        <i class="fa-solid fa-bolt-lightning text-2xl sm:text-3xl"></i>
+      </div>
+
+      <h1 class="text-xl sm:text-2xl font-extrabold text-center text-white mb-2">آزمایشگاه مجازی برق AC</h1>
+      <p class="text-slate-400 text-xs sm:text-sm text-center mb-5 sm:mb-6 leading-relaxed">
+        شبیه‌ساز تعاملی مدارهای <span class="text-sky-400 font-semibold">RLC سری</span>، تحلیل برداری و اندازه‌گیری توان
+      </p>
+
+      <form id="student-login-form" class="space-y-4">
+        <div>
+          <label for="student-name-input" class="block text-xs sm:text-sm font-medium text-slate-300 mb-1.5">
+            نام و نام خانوادگی دانش‌آموز / آزمایشگر:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
+              <i class="fa-solid fa-user-graduate"></i>
+            </span>
+            <input 
+              type="text" 
+              id="student-name-input" 
+              required
+              placeholder="مثلاً: علی محمدی"
+              class="w-full bg-slate-800/90 border border-slate-600 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 rounded-xl py-3 pr-10 pl-4 text-sm sm:text-base text-white placeholder-slate-500 outline-none transition"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="student-group-input" class="block text-xs font-medium text-slate-400 mb-1.5">
+            کلاس یا شماره گروه (اختیاری):
+          </label>
+          <input 
+            type="text" 
+            id="student-group-input" 
+            placeholder="مثلاً: دهم برق - گروه الف"
+            class="w-full bg-slate-800/60 border border-slate-700 focus:border-sky-400 rounded-xl py-2.5 px-4 text-xs sm:text-sm text-white placeholder-slate-500 outline-none transition"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-l from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-sky-500/25 transition transform active:scale-[0.99] flex items-center justify-center gap-2 mt-2 text-sm sm:text-base"
+        >
+          <span>ورود به محیط آزمایشگاه</span>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+      </form>
+
+      <div class="mt-5 pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+        <span id="db-connection-badge" class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          آماده ثبت در سامانه...
+        </span>
+        <button type="button" onclick="openTeacherModalDirect()" class="text-sky-400 hover:text-sky-300 underline underline-offset-4 font-medium">
+          ورود مستقیم استاد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نوار ابزار بالایی (Header) - کاملاً واکنش‌گرا در موبایل -->
+  <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-30 backdrop-blur-md">
+    <div class="max-w-[1600px] mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+      <!-- لوگو و عنوان -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+          <i class="fa-solid fa-wave-square text-base sm:text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-sm sm:text-lg text-white leading-tight">آزمایشگاه مجازی RLC</h1>
+            <span class="hidden md:inline-block text-[11px] bg-sky-500/15 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full">نسخه آموزشی</span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-400">شبیه‌ساز جریان AC، فازورها و توان</p>
+        </div>
+      </div>
+
+      <!-- اطلاعات کاربر فعال و دکمه‌های ناوبری -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 flex-wrap">
+        <!-- نشانگر دانش‌آموز وارد شده -->
+        <div id="active-user-pill" class="hidden sm:flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs">
+          <i class="fa-solid fa-user-check text-emerald-400"></i>
+          <span class="text-slate-400">آزمایشگر:</span>
+          <span id="header-student-name" class="font-bold text-white">مهمان</span>
+          <button onclick="switchStudent()" title="تغییر نام دانش‌آموز" class="text-slate-400 hover:text-sky-400 mr-1 transition">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+        </div>
+
+        <!-- دکمه ثبت دستی آزمایش -->
+        <button 
+          onclick="manualLogExperiment()" 
+          class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-clipboard-check"></i>
+          <span class="hidden xs:inline">ثبت در کارنامه</span>
+        </button>
+
+        <!-- دکمه راهنما و لینک اشتراک‌گذاری -->
+        <button 
+          onclick="toggleModal('guide-modal', true)" 
+          class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium px-2.5 py-2 rounded-xl transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-circle-question text-sky-400"></i>
+          <span class="hidden sm:inline">راهنما و لینک</span>
+        </button>
+
+        <!-- دکمه پنل مدیریت استاد -->
+        <button 
+          onclick="openTeacherPanel()" 
+          class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5"
+        >
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <span>پنل استاد</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- بدنه اصلی آزمایشگاه -->
+  <main class="flex-1 max-w-[1600px] w-full mx-auto p-2 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
+    
+    <!-- ستون اول (راست): پنل کنترل قطعات مدار -->
+    <section class="lg:col-span-3 space-y-3 sm:space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+          <h2 class="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-sky-400"></i>
+            تنظیم مقادیر قطعات مدار
+          </h2>
+          <button 
+            onclick="resetCircuitDefaults()" 
+            title="بازنشانی مقادیر اولیه"
+            class="text-[11px] text-slate-400 hover:text-white bg-slate-800 px-2.5 py-1 rounded-lg transition"
+          >
+            بازنشانی
+          </button>
+        </div>
+
+        <div class="space-y-3 sm:space-y-4">
+          <!-- منبع ولتاژ متناوب V_rms -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                ولتاژ موثر منبع (V<sub>rms</sub>)
+              </label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="input-v" min="1" max="240" step="1" value="120" class="ltr-num w-16 bg-slate-900 border border-slate-600 rounded-lg px-2 py-1 text-xs text-center font-bold text-white outline-none focus:border-sky-400">
+                <span class="text-xs text-slate-400">V</span>
+              </div>
+            </div>
+            <input type="range" id="slider-v" min="1" max="240" step="1" value="120" class="w-full">
+          </div>
+
+          <!-- فرکانس منبع f -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-purple-300 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                فرکانس منبع (f)
+              </label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="input-f" min="0" max="1000" step="1" value="50" class="ltr-num w-16 bg-slate-900 border border-slate-600 rounded-lg px-2 py-1 text-xs text-center font-bold text-white outline-none focus:border-purple-400">
+                <span class="text-xs text-slate-400">Hz</span>
+              </div>
+            </div>
+            <input type="range" id="slider-f" min="0" max="1000" step="1" value="50" class="w-full">
+            <div class="text-[10px] text-slate-400 mt-1 text-left">صفر (0 Hz) = تبدیل منبع به جریان مستقیم (DC)</div>
+          </div>
+
+          <!-- مقاومت R -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-amber-300 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                مقاومت اهمی (R)
+              </label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="input-r" min="0" max="500" step="1" value="40" class="ltr-num w-16 bg-slate-900 border border-slate-600 rounded-lg px-2 py-1 text-xs text-center font-bold text-white outline-none focus:border-amber-400">
+                <span class="text-xs text-slate-400">Ω</span>
+              </div>
+            </div>
+            <input type="range" id="slider-r" min="0" max="500" step="1" value="40" class="w-full">
+            <div class="text-[10px] text-slate-400 mt-1 text-left">صفر (0) = حذف مقاومت (اتصال کوتاه)</div>
+          </div>
+
+          <!-- سلف L -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                ضریب خودالقایی سلف (L)
+              </label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="input-l" min="0" max="500" step="1" value="150" class="ltr-num w-16 bg-slate-900 border border-slate-600 rounded-lg px-2 py-1 text-xs text-center font-bold text-white outline-none focus:border-emerald-400">
+                <span class="text-xs text-slate-400">mH</span>
+              </div>
+            </div>
+            <input type="range" id="slider-l" min="0" max="500" step="1" value="150" class="w-full">
+            <div class="text-[10px] text-slate-400 mt-1 text-left">صفر (0) = حذف سلف (اتصال کوتاه)</div>
+          </div>
+
+          <!-- خازن C -->
+          <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs font-semibold text-rose-300 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                ظرفیت خازن (C)
+              </label>
+              <div class="flex items-center gap-1">
+                <input type="number" id="input-c" min="0" max="500" step="1" value="60" class="ltr-num w-16 bg-slate-900 border border-slate-600 rounded-lg px-2 py-1 text-xs text-center font-bold text-white outline-none focus:border-rose-400">
+                <span class="text-xs text-slate-400">µF</span>
+              </div>
+            </div>
+            <input type="range" id="slider-c" min="0" max="500" step="1" value="60" class="w-full">
+            <div class="text-[10px] text-slate-400 mt-1 text-left">صفر (0) = حذف خازن (اتصال کوتاه)</div>
+          </div>
+
+          <!-- دکمه تنظیم روی فرکانس تشدید -->
+          <div class="pt-1">
+            <button 
+              onclick="tuneToResonance()" 
+              class="w-full bg-gradient-to-l from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/20 transition flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-bullseye"></i>
+              <span>تنظیم خودکار روی فرکانس تشدید (رزونانس)</span>
+            </button>
+            <p class="text-[11px] text-slate-400 text-center mt-1.5">
+              فرکانس تشدید فعلی: <span id="resonance-freq-hint" class="ltr-num font-bold text-indigo-300">53.05 Hz</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- کارت وضعیت و تحلیل کیفی مدار -->
+      <div id="circuit-mode-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-400 font-medium">حالت عملکرد مدار:</span>
+          <span id="circuit-mode-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+            حالت خازنی (X<sub>C</sub> &gt; X<sub>L</sub>)
+          </span>
+        </div>
+        <p id="circuit-mode-desc" class="text-xs text-slate-300 leading-relaxed">
+          در این حالت راکتانس خازنی بزرگ‌تر از راکتانس القایی است؛ بنابراین جریان از نظر فاز از ولتاژ کل جلوتر است.
+        </p>
+      </div>
+    </section>
+
+    <!-- ستون دوم (وسط): شماتیک زنده مدار + اسیلوسکوپ -->
+    <section class="lg:col-span-5 flex flex-col gap-3 sm:gap-5">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <h2 class="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-sky-400"></i>
+            شماتیک زنده مدار RLC سری
+          </h2>
+
+          <!-- کنترل کلید مدار و نمایش توان‌ها -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button 
+              id="power-view-toggle-btn"
+              onclick="togglePowerDisplayMode()" 
+              class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition flex items-center gap-1 shadow"
+            >
+              <i id="power-view-icon" class="fa-solid fa-bolt text-amber-400"></i>
+              <span id="power-view-text">نمایش توان‌ها</span>
+            </button>
+
+            <button 
+              id="switch-toggle-btn"
+              onclick="toggleCircuitSwitch()" 
+              class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl transition flex items-center gap-1 shadow"
+            >
+              <i class="fa-solid fa-power-off"></i>
+              <span id="switch-status-text">کلید: وصل</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- کانتینر بوم شماتیک با ارتفاع واکنش‌گرا -->
+        <div class="relative w-full h-[250px] sm:h-[350px] rounded-xl overflow-hidden border border-slate-700/80 lab-grid-bg">
+          <canvas id="schematic-canvas" class="w-full h-full block cursor-pointer" title="برای قطع یا وصل کلید می‌توانید روی کلید مدار کلیک کنید"></canvas>
+          
+          <div class="absolute bottom-2 right-2 left-2 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 bg-slate-950/75 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-slate-800/80 pointer-events-none">
+            <span id="schematic-footer-hint"><i class="fa-solid fa-arrow-left-long text-amber-400 ml-1"></i>جریان AC و المان‌های مدار</span>
+            <span class="hidden sm:inline">کلیک روی کلید برای قطع/وصل</span>
+          </div>
+        </div>
+
+        <!-- هشدار اضافه ولتاژ در حالت رزونانس -->
+        <div id="overvoltage-alert" class="hidden mt-3 bg-rose-500/15 border border-rose-500/40 rounded-xl p-3 flex items-start gap-2.5 text-rose-200 text-xs">
+          <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base mt-0.5"></i>
+          <div>
+            <strong class="font-bold text-rose-300 block mb-0.5">هشدار اضافه ولتاژ تشدید (رزونانس)!</strong>
+            ولتاژ دو سر سلف (<span id="alert-vl" class="ltr-num font-bold">0V</span>) یا خازن (<span id="alert-vc" class="ltr-num font-bold">0V</span>) از ولتاژ منبع (<span id="alert-vs" class="ltr-num font-bold">0V</span>) بیشتر شده است.
+          </div>
+        </div>
+      </div>
+
+      <!-- اسیلوسکوپ دوکاناله -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg flex-1 flex flex-col">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <h2 class="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-emerald-400"></i>
+            اسیلوسکوپ دوکاناله v(t) و i(t)
+          </h2>
+          <div class="flex items-center gap-2.5 text-[11px]">
+            <span class="flex items-center gap-1 text-sky-400 font-medium">
+              <span class="w-2.5 h-1 bg-sky-400 rounded"></span> v(t)
+            </span>
+            <span class="flex items-center gap-1 text-amber-400 font-medium">
+              <span class="w-2.5 h-1 bg-amber-400 rounded"></span> i(t)
+            </span>
+          </div>
+        </div>
+
+        <div class="relative w-full h-[160px] sm:h-[210px] rounded-xl overflow-hidden border border-slate-700/80 bg-slate-950">
+          <canvas id="scope-canvas" class="w-full h-full block"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ستون سوم (چپ): نمودار برداری و مولتی‌متر دیجیتال -->
+    <section class="lg:col-span-4 space-y-3 sm:space-y-4">
+      
+      <!-- نمودار برداری (فازورها) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <h2 class="font-bold text-xs sm:text-sm text-white flex items-center gap-2">
+            <i class="fa-solid fa-compass-drafting text-purple-400"></i>
+            نمودار برداری (فازورها)
+          </h2>
+
+          <div class="flex items-center gap-1.5">
+            <select id="phasor-mode-select" onchange="updatePhasorMode()" class="bg-slate-800 border border-slate-700 text-[11px] text-slate-200 rounded-lg px-2 py-1 outline-none">
+              <option value="voltage">ولتاژها</option>
+              <option value="impedance">امپدانس (Z)</option>
+              <option value="power">مثلث توان</option>
+            </select>
+
+            <button 
+              id="phasor-spin-btn"
+              onclick="togglePhasorRotation()" 
+              title="چرخش بردارها با سرعت زاویه‌ای ω"
+              class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1"
+            >
+              <i id="phasor-spin-icon" class="fa-solid fa-play"></i>
+              <span id="phasor-spin-text">چرخش</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative w-full h-[230px] sm:h-[280px] rounded-xl overflow-hidden border border-slate-700/80 bg-slate-950 flex items-center justify-center">
+          <canvas id="phasor-canvas" class="w-full h-full block"></canvas>
+          
+          <div class="absolute top-2 right-2 bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-lg text-[11px]">
+            <span class="text-slate-400">φ: </span>
+            <span id="phasor-angle-badge" class="ltr-num font-bold text-amber-400">0.0°</span>
+          </div>
+        </div>
+
+        <div id="phasor-legend" class="mt-2.5 flex flex-wrap items-center justify-center gap-2 text-[10px] sm:text-[11px] text-slate-300">
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> V<sub>R</sub>/I</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> V<sub>L</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span> V<sub>C</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> V<sub>total</sub></span>
+        </div>
+      </div>
+
+      <!-- پنل مولتی‌متر دیجیتال و توان‌سنج -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg">
+        <h2 class="font-bold text-xs sm:text-sm text-white flex items-center gap-2 border-b border-slate-800 pb-2 mb-3">
+          <i class="fa-solid fa-gauge-high text-sky-400"></i>
+          مولتی‌متر و توان‌سنج دیجیتال
+        </h2>
+
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-2.5">
+            <div class="text-[11px] text-slate-400">جریان موثر (I<sub>rms</sub>)</div>
+            <div id="val-irms" class="ltr-num text-base font-extrabold text-amber-400 mt-0.5">0.00 A</div>
+          </div>
+          <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-2.5">
+            <div class="text-[11px] text-slate-400">امپدانس کل (Z)</div>
+            <div id="val-z" class="ltr-num text-base font-extrabold text-purple-400 mt-0.5">0.00 Ω</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-2 flex items-center justify-between text-xs">
+            <span class="text-emerald-300">X<sub>L</sub></span>
+            <span id="val-xl" class="ltr-num font-bold text-white">0.00 Ω</span>
+          </div>
+          <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-2 flex items-center justify-between text-xs">
+            <span class="text-rose-300">X<sub>C</sub></span>
+            <span id="val-xc" class="ltr-num font-bold text-white">0.00 Ω</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1.5 mb-2.5">
+          <div class="bg-amber-500/10 border border-amber-500/25 rounded-xl p-2 text-center">
+            <div class="text-[10px] text-amber-300">V<sub>R</sub></div>
+            <div id="val-vr" class="ltr-num text-xs sm:text-sm font-bold text-white mt-0.5">0.0 V</div>
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/25 rounded-xl p-2 text-center">
+            <div class="text-[10px] text-emerald-300">V<sub>L</sub></div>
+            <div id="val-vl" class="ltr-num text-xs sm:text-sm font-bold text-white mt-0.5">0.0 V</div>
+          </div>
+          <div class="bg-rose-500/10 border border-rose-500/25 rounded-xl p-2 text-center">
+            <div class="text-[10px] text-rose-300">V<sub>C</sub></div>
+            <div id="val-vc" class="ltr-num text-xs sm:text-sm font-bold text-white mt-0.5">0.0 V</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-2.5 space-y-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">توان اکتیو (P):</span>
+            <span id="val-p" class="ltr-num font-bold text-emerald-400">0.00 W</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">توان راکتیو (Q):</span>
+            <span id="val-q" class="ltr-num font-bold text-rose-400">0.00 VAR</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">توان ظاهری (S):</span>
+            <span id="val-s" class="ltr-num font-bold text-sky-400">0.00 VA</span>
+          </div>
+          <div class="pt-1 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-slate-300 font-medium">ضریب توان (cos φ):</span>
+            <span id="val-pf" class="ltr-num font-extrabold text-amber-300">1.000</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- مودال رمز ورود استاد -->
+  <div id="teacher-auth-modal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+          <i class="fa-solid fa-lock text-amber-400"></i>
+          ورود به پنل استاد
+        </h3>
+        <button onclick="toggleModal('teacher-auth-modal', false)" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+        برای مشاهده گزارش‌های آزمایش دانش‌آموزان رمز عبور را وارد کنید.
+      </p>
+      <form id="teacher-password-form" class="space-y-4">
+        <div>
+          <input 
+            type="password" 
+            id="teacher-password-input" 
+            required
+            placeholder="رمز (پیش‌فرض: 1234)"
+            class="ltr-num w-full bg-slate-800 border border-slate-600 focus:border-amber-400 rounded-xl py-2.5 px-4 text-center text-white outline-none"
+          />
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition">
+          تأیید و ورود
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- مودال پنل مدیریت و گزارش‌های استاد -->
+  <div id="teacher-dashboard-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-6">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="bg-slate-800/80 border-b border-slate-700 px-4 sm:px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base text-white">کارنامه آزمایش‌های دانش‌آموزان</h3>
+            <p class="text-[11px] text-slate-400">مشاهده فعالیت‌ها و گزارش‌های متنی ثبت‌شده</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="exportAllReportsText()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <span class="hidden xs:inline">دانلود (.txt)</span>
+          </button>
+          <button onclick="copyAllReportsText()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-copy"></i>
+            <span class="hidden xs:inline">کپی متن</span>
+          </button>
+          <button onclick="toggleModal('teacher-dashboard-modal', false)" class="bg-rose-500/20 text-rose-300 px-3 py-2 rounded-xl text-xs font-bold transition">
+            بستن
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/60 border-b border-slate-800 px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+            <span class="text-slate-400">تعداد کل ورودها: </span>
+            <span id="stat-total-students" class="font-bold text-sky-400">0</span>
+          </div>
+          <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+            <span class="text-slate-400">آزمایش‌ها: </span>
+            <span id="stat-total-logs" class="font-bold text-emerald-400">0</span>
+          </div>
+          <select id="filter-student-select" onchange="renderTeacherLogs()" class="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 outline-none">
+            <option value="ALL">همه دانش‌آموزان</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="text" id="new-teacher-pass" placeholder="رمز جدید..." class="ltr-num bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white w-28 outline-none">
+          <button onclick="changeTeacherPassword()" class="bg-amber-600 hover:bg-amber-500 text-white font-semibold px-2.5 py-1 rounded-lg transition">
+            تغییر
+          </button>
+        </div>
+      </div>
+
+      <div id="teacher-logs-container" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+        <div class="text-center text-slate-500 py-12">
+          <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
+          <p class="text-sm">در حال بارگذاری گزارش‌ها...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال راهنما و دریافت لینک اشتراک‌گذاری -->
+  <div id="guide-modal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-sky-400"></i>
+          راهنما و اشتراک‌گذاری با دانش‌آموزان (موبایل و کامپیوتر)
+        </h3>
+        <button onclick="toggleModal('guide-modal', false)" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <div class="bg-slate-800/70 border border-slate-700 rounded-xl p-3.5">
+          <h4 class="font-bold text-sky-400 mb-1"><i class="fa-solid fa-share-nodes ml-1"></i>نحوه دسترسی با گوشی موبایل (اندروید و آیفون):</h4>
+          <p class="text-slate-300 text-xs mb-2">
+            کافی است این لینک را در واتساپ، شاد، ایتا یا تلگرام برای شاگردان ارسال کنید. برنامه کاملاً برای صفحات لمسی و موبایل بهینه‌سازی شده است.
+          </p>
+          <div class="flex items-center gap-2">
+            <input type="text" id="share-url-input" readonly class="ltr-num flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 outline-none">
+            <button onclick="copyShareUrl()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition whitespace-nowrap">
+              کپی لینک
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5">
+          <h4 class="font-bold text-amber-300 mb-1"><i class="fa-solid fa-key ml-1"></i>پنل استاد و ثبت کارنامه:</h4>
+          <p class="text-slate-300 text-xs">
+            رمز پیش‌فرض استاد <code class="ltr-num bg-slate-950 px-1.5 py-0.5 rounded text-amber-400 font-bold">1234</code> است. با زدن دکمه «پنل استاد» می‌توانید تمام گزارش‌ها و آزمایش‌های دانش‌آموزان را مشاهده کنید.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="toggleModal('guide-modal', false)" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+          متوجه شدم
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- اسکریپت اصلی برنامه -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, addDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'rlc-virtual-lab-default';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let isFirebaseReady = false;
+
+    let localFallbackLogs = [];
+    let allServerLogs = [];
+    let teacherPassword = "1234";
+
+    let currentStudent = {
+      name: "",
+      group: "",
+      loginTime: ""
+    };
+
+    const circuit = {
+      V: 120,
+      f: 50,
+      R: 40,
+      L_mH: 150,
+      C_uF: 60,
+      switchClosed: true,
+      XL: 0,
+      XC: 0,
+      X: 0,
+      Z: 0,
+      I: 0,
+      Imax: 0,
+      VR: 0,
+      VL: 0,
+      VC: 0,
+      phiRad: 0,
+      phiDeg: 0,
+      P: 0,
+      Q: 0,
+      S: 0,
+      pf: 1,
+      fResonance: 0,
+      mode: 'capacitive'
+    };
+
+    let animPhase = 0;
+    let phasorRotating = false;
+    let phasorSpinAngle = 0;
+    let lastTimestamp = 0;
+    let showPowerOnLab = false;
+    let autoLogDebounceTimer = null;
+    let lastAutoLoggedSignature = "";
+    let dcFlowOffset = 0;
+
+    const schematicCanvas = document.getElementById('schematic-canvas');
+    const schematicCtx = schematicCanvas.getContext('2d');
+    const phasorCanvas = document.getElementById('phasor-canvas');
+    const phasorCtx = phasorCanvas.getContext('2d');
+    const scopeCanvas = document.getElementById('scope-canvas');
+    const scopeCtx = scopeCanvas.getContext('2d');
+
+    function resizeAllCanvases() {
+      const dpr = window.devicePixelRatio || 1;
+      [
+        { canvas: schematicCanvas, ctx: schematicCtx },
+        { canvas: phasorCanvas, ctx: phasorCtx },
+        { canvas: scopeCanvas, ctx: scopeCtx }
+      ].forEach(({ canvas, ctx }) => {
+        if (!canvas || !canvas.parentElement) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      setTimeout(resizeAllCanvases, 150);
+    });
+
+    schematicCanvas.addEventListener('click', handleSchematicTouch);
+    schematicCanvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        const touch = e.changedTouches[0];
+        const rect = schematicCanvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        checkSwitchClick(x, y, rect.width, rect.height);
+      }
+    });
+
+    schematicCanvas.addEventListener('click', (e) => {
+      const rect = schematicCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      checkSwitchClick(x, y, rect.width, rect.height);
+    });
+
+    function checkSwitchClick(x, y, w, h) {
+      const leftX = Math.max(52, w * 0.14);
+      const rightX = Math.min(w - 52, w * 0.86);
+      const topY = Math.max(48, h * 0.22);
+      const swCenterX = leftX + (rightX - leftX) * 0.34;
+
+      if (Math.abs(x - swCenterX) < 45 && Math.abs(y - topY) < 40) {
+        toggleCircuitSwitch();
+      }
+    }
+
+    function handleSchematicTouch(e) {}
+
+    const controlBindings = [
+      { key: 'V', slider: 'slider-v', input: 'input-v', min: 1, max: 240 },
+      { key: 'f', slider: 'slider-f', input: 'input-f', min: 0, max: 1000 },
+      { key: 'R', slider: 'slider-r', input: 'input-r', min: 0, max: 500 },
+      { key: 'L_mH', slider: 'slider-l', input: 'input-l', min: 0, max: 500 },
+      { key: 'C_uF', slider: 'slider-c', input: 'input-c', min: 0, max: 500 }
+    ];
+
+    controlBindings.forEach(({ key, slider, input, min, max }) => {
+      const sliderEl = document.getElementById(slider);
+      const inputEl = document.getElementById(input);
+
+      if (sliderEl && inputEl) {
+        sliderEl.addEventListener('input', (e) => {
+          const val = parseFloat(e.target.value) || 0;
+          inputEl.value = val;
+          if (key === 'L_mH') circuit.L_mH = val;
+          else if (key === 'C_uF') circuit.C_uF = val;
+          else circuit[key] = val;
+          calculateCircuit();
+          scheduleAutoLog();
+        });
+
+        inputEl.addEventListener('input', (e) => {
+          let val = parseFloat(e.target.value);
+          if (isNaN(val)) return;
+          if (val < min) val = min;
+          if (val > max) val = max;
+          sliderEl.value = val;
+          if (key === 'L_mH') circuit.L_mH = val;
+          else if (key === 'C_uF') circuit.C_uF = val;
+          else circuit[key] = val;
+          calculateCircuit();
+          scheduleAutoLog();
+        });
+      }
+    });
+
+    function calculateCircuit() {
+      const isDC = circuit.f === 0;
+      circuit.isDC = isDC;
+
+      const omega = 2 * Math.PI * circuit.f;
+      const L_H = circuit.L_mH / 1000;
+      const C_F = circuit.C_uF / 1e6;
+
+      circuit.XL = (!isDC && L_H > 0) ? omega * L_H : 0;
+
+      if (C_F <= 0) {
+        circuit.XC = 0;
+      } else if (isDC) {
+        circuit.XC = Infinity;
+      } else {
+        circuit.XC = 1 / (omega * C_F);
+      }
+
+      circuit.isOpenByCapacitor = circuit.switchClosed && isDC && C_F > 0;
+      circuit.X = circuit.isOpenByCapacitor ? -Infinity : (circuit.XL - circuit.XC);
+      circuit.Z = circuit.isOpenByCapacitor ? Infinity : Math.hypot(circuit.R, circuit.X);
+      circuit.isShortCircuit = circuit.switchClosed && !circuit.isOpenByCapacitor && circuit.Z < 0.001;
+
+      if (!circuit.switchClosed) {
+        circuit.I = 0;
+        circuit.Imax = 0;
+        circuit.VR = 0;
+        circuit.VL = 0;
+        circuit.VC = 0;
+        circuit.P = 0;
+        circuit.Q = 0;
+        circuit.S = 0;
+      } else if (circuit.isOpenByCapacitor) {
+        circuit.I = 0;
+        circuit.Imax = 0;
+        circuit.VR = 0;
+        circuit.VL = 0;
+        circuit.VC = circuit.V;
+        circuit.P = 0;
+        circuit.Q = 0;
+        circuit.S = 0;
+      } else if (circuit.isShortCircuit) {
+        circuit.I = Infinity;
+        circuit.Imax = Infinity;
+        circuit.VR = 0;
+        circuit.VL = 0;
+        circuit.VC = 0;
+        circuit.P = 0;
+        circuit.Q = 0;
+        circuit.S = Infinity;
+      } else {
+        circuit.I = circuit.V / circuit.Z;
+        circuit.Imax = isDC ? circuit.I : circuit.I * Math.SQRT2;
+        circuit.VR = circuit.I * circuit.R;
+        circuit.VL = circuit.I * circuit.XL;
+        circuit.VC = circuit.I * circuit.XC;
+        circuit.P = circuit.I * circuit.I * circuit.R;
+        circuit.Q = isDC ? 0 : circuit.I * circuit.I * circuit.X;
+        circuit.S = circuit.V * circuit.I;
+      }
+
+      if (circuit.isOpenByCapacitor) {
+        circuit.phiRad = -Math.PI / 2;
+        circuit.phiDeg = -90;
+        circuit.pf = 0;
+      } else if (isDC || circuit.Z === 0) {
+        circuit.phiRad = 0;
+        circuit.phiDeg = 0;
+        circuit.pf = 1;
+      } else {
+        circuit.phiRad = Math.atan2(circuit.X, circuit.R);
+        circuit.phiDeg = (circuit.phiRad * 180) / Math.PI;
+        circuit.pf = Math.cos(circuit.phiRad);
+      }
+
+      if (L_H > 0 && C_F > 0) {
+        circuit.fResonance = 1 / (2 * Math.PI * Math.sqrt(L_H * C_F));
+        document.getElementById('resonance-freq-hint').textContent = `${circuit.fResonance.toFixed(2)} Hz`;
+      } else {
+        circuit.fResonance = 0;
+        document.getElementById('resonance-freq-hint').textContent = 'تعریف‌نشده';
+      }
+
+      updateMetersAndStatus();
+    }
+
+    function updateMetersAndStatus() {
+      const fmt = (num, dec = 2) => (Number.isFinite(num) ? num.toFixed(dec) : '∞');
+
+      const safeSetText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      safeSetText('val-irms', `${fmt(circuit.I, 2)} A`);
+      safeSetText('val-z', `${fmt(circuit.Z, 2)} Ω`);
+      safeSetText('val-phi', `${fmt(circuit.phiDeg, 1)}°`);
+      safeSetText('phasor-angle-badge', `${fmt(circuit.phiDeg, 1)}°`);
+
+      safeSetText('val-xl', `${fmt(circuit.XL, 2)} Ω`);
+      safeSetText('val-xc', `${fmt(circuit.XC, 2)} Ω`);
+
+      safeSetText('val-vr', `${fmt(circuit.VR, 1)} V`);
+      safeSetText('val-vl', `${fmt(circuit.VL, 1)} V`);
+      safeSetText('val-vc', `${fmt(circuit.VC, 1)} V`);
+
+      safeSetText('val-p', `${fmt(circuit.P, 2)} W`);
+      safeSetText('val-q', `${fmt(circuit.Q, 2)} VAR`);
+      safeSetText('val-s', `${fmt(circuit.S, 2)} VA`);
+      safeSetText('val-pf', `${fmt(circuit.pf, 3)}`);
+
+      const badge = document.getElementById('circuit-mode-badge');
+      const desc = document.getElementById('circuit-mode-desc');
+      const activeParts = [];
+      if (circuit.R > 0) activeParts.push('R');
+      if (circuit.L_mH > 0) activeParts.push('L');
+      if (circuit.C_uF > 0) activeParts.push('C');
+      const topologyName = activeParts.length > 0 ? activeParts.join('') : 'اتصال کوتاه';
+
+      if (badge && desc) {
+        if (circuit.isShortCircuit) {
+          circuit.mode = 'short';
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-600/30 text-rose-300 border border-rose-500';
+          badge.textContent = circuit.isDC ? 'اتصال کوتاه در جریان مستقیم (DC)' : 'اتصال کوتاه کامل';
+          desc.textContent = 'تمام المان‌های مقاومت و راکتانس صفر شده‌اند!';
+        } else if (circuit.isDC) {
+          circuit.mode = 'dc';
+          if (circuit.C_uF > 0) {
+            badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40';
+            badge.textContent = `جریان مستقیم (DC) - خازن مدار باز`;
+            desc.textContent = 'در جریان مستقیم، خازن مدار باز است (جریان صفر) و کل ولتاژ دو سر خازن می‌افتد.';
+          } else {
+            badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-sky-500/25 text-sky-300 border border-sky-500/40';
+            badge.textContent = `جریان مستقیم (DC) - مدار ${topologyName}`;
+            desc.textContent = 'در فرکانس صفر (DC)، سلف مانند سیم ساده عمل کرده و جریان مستقیماً از مقاومت عبور می‌کند.';
+          }
+        } else if (circuit.L_mH > 0 && circuit.C_uF > 0 && Math.abs(circuit.XL - circuit.XC) < 0.25) {
+          circuit.mode = 'resonance';
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-500/25 text-indigo-300 border border-indigo-500/40';
+          badge.textContent = `حالت تشدید / رزونانس (${topologyName})`;
+          desc.textContent = 'راکتانس سلفی و خازنی برابرند (XL = XC)؛ امپدانس برابر با مقدار ثابت مقاومت R (Z = R) است.';
+        } else if (circuit.XL > circuit.XC) {
+          circuit.mode = 'inductive';
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          badge.textContent = `حالت سلفی - مدار ${topologyName}`;
+          desc.textContent = 'راکتانس القایی غالب است (XL > XC)؛ جریان پس‌فاز است.';
+        } else if (circuit.XC > circuit.XL) {
+          circuit.mode = 'capacitive';
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badge.textContent = `حالت خازنی - مدار ${topologyName}`;
+          desc.textContent = 'راکتانس خازنی غالب است (XC > XL)؛ جریان پیش‌فاز است.';
+        } else {
+          circuit.mode = 'resistive';
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+          badge.textContent = `حالت اهمی خالص (${topologyName})`;
+          desc.textContent = 'مدار فقط مقاومت دارد و ولتاژ و جریان هم‌فازند.';
+        }
+      }
+
+      const ovAlert = document.getElementById('overvoltage-alert');
+      if (ovAlert) {
+        if (circuit.switchClosed && !circuit.isShortCircuit && (circuit.VL > circuit.V * 1.02 || circuit.VC > circuit.V * 1.02)) {
+          ovAlert.classList.remove('hidden');
+          safeSetText('alert-vl', `${circuit.VL.toFixed(1)}V`);
+          safeSetText('alert-vc', `${circuit.VC.toFixed(1)}V`);
+          safeSetText('alert-vs', `${circuit.V}V`);
+        } else {
+          ovAlert.classList.add('hidden');
+        }
+      }
+
+      const resonanceHint = document.getElementById('resonance-freq-hint');
+      if (resonanceHint) {
+        const L_H = circuit.L_mH / 1000;
+        const C_F = circuit.C_uF / 1e6;
+        if (L_H > 0 && C_F > 0) {
+          circuit.fResonance = 1 / (2 * Math.PI * Math.sqrt(L_H * C_F));
+          resonanceHint.textContent = `${circuit.fResonance.toFixed(2)} Hz`;
+        } else {
+          circuit.fResonance = 0;
+          resonanceHint.textContent = 'تعریف‌نشده';
+        }
+      }
+    }
+
+    window.toggleCircuitSwitch = function() {
+      circuit.switchClosed = !circuit.switchClosed;
+      const btn = document.getElementById('switch-toggle-btn');
+      const txt = document.getElementById('switch-status-text');
+      if (circuit.switchClosed) {
+        btn.className = 'bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow';
+        txt.textContent = 'کلید: وصل';
+      } else {
+        btn.className = 'bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow';
+        txt.textContent = 'کلید: قطع';
+      }
+      calculateCircuit();
+      scheduleAutoLog();
+    };
+
+    window.togglePowerDisplayMode = function() {
+      showPowerOnLab = !showPowerOnLab;
+      const btn = document.getElementById('power-view-toggle-btn');
+      const txt = document.getElementById('power-view-text');
+      const phasorSelect = document.getElementById('phasor-mode-select');
+
+      if (showPowerOnLab) {
+        btn.className = 'bg-amber-500/25 hover:bg-amber-500/35 text-amber-200 border border-amber-400 text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow';
+        txt.textContent = 'نمایش توان‌ها: فعال';
+        phasorSelect.value = 'power';
+      } else {
+        btn.className = 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow';
+        txt.textContent = 'نمایش توان‌ها';
+        phasorSelect.value = 'voltage';
+      }
+      updatePhasorMode();
+    };
+
+    window.tuneToResonance = function() {
+      if (circuit.L_mH <= 0 || circuit.C_uF <= 0) {
+        showToast('برای تنظیم فرکانس تشدید، مقدار سلف و خازن باید بزرگ‌تر از صفر باشد.', 'error');
+        return;
+      }
+      const f0 = 1 / (2 * Math.PI * Math.sqrt((circuit.L_mH / 1000) * (circuit.C_uF / 1e6)));
+      const clampedF = Math.max(0, Math.min(1000, Math.round(f0 * 10) / 10));
+      circuit.f = clampedF;
+      document.getElementById('slider-f').value = Math.round(clampedF);
+      document.getElementById('input-f').value = clampedF;
+      calculateCircuit();
+      showToast(`فرکانس روی تشدید (${clampedF} Hz) تنظیم شد.`, 'success');
+      scheduleAutoLog();
+    };
+
+    window.resetCircuitDefaults = function() {
+      circuit.V = 120;
+      circuit.f = 50;
+      circuit.R = 40;
+      circuit.L_mH = 150;
+      circuit.C_uF = 60;
+      circuit.switchClosed = true;
+
+      document.getElementById('slider-v').value = 120;
+      document.getElementById('input-v').value = 120;
+      document.getElementById('slider-f').value = 50;
+      document.getElementById('input-f').value = 50;
+      document.getElementById('slider-r').value = 40;
+      document.getElementById('input-r').value = 40;
+      document.getElementById('slider-l').value = 150;
+      document.getElementById('input-l').value = 150;
+      document.getElementById('slider-c').value = 60;
+      document.getElementById('input-c').value = 60;
+
+      const btn = document.getElementById('switch-toggle-btn');
+      btn.className = 'bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow';
+      document.getElementById('switch-status-text').textContent = 'کلید: وصل';
+
+      calculateCircuit();
+      showToast('مقادیر مدار به حالت اولیه بازنشانی شد.', 'info');
+    };
+
+    async function initCloudBackend() {
+      const badge = document.getElementById('db-connection-badge');
+      try {
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+          const firebaseConfig = JSON.parse(__firebase_config);
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
+
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+          currentUser = auth.currentUser;
+          isFirebaseReady = true;
+
+          const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'teacher');
+          const settingsSnap = await getDoc(settingsRef);
+          if (settingsSnap.exists() && settingsSnap.data().password) {
+            teacherPassword = settingsSnap.data().password;
+          }
+
+          const logsCol = collection(db, 'artifacts', appId, 'public', 'data', 'experiment_logs');
+          onSnapshot(logsCol, (snapshot) => {
+            allServerLogs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            allServerLogs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            renderTeacherLogs();
+          }, (err) => {
+            console.error('Firestore listener error:', err);
+          });
+
+          if (badge) {
+            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span>متصل به سامانه ابری`;
+          }
+        } else {
+          throw new Error('Local fallback mode');
+        }
+      } catch (e) {
+        isFirebaseReady = false;
+        const savedPass = localStorage.getItem('rlc_teacher_pass');
+        if (savedPass) teacherPassword = savedPass;
+        try {
+          localFallbackLogs = JSON.parse(localStorage.getItem('rlc_lab_logs') || '[]');
+        } catch (_) {
+          localFallbackLogs = [];
+        }
+        if (badge) {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400"></span>آماده ثبت آزمایش`;
+        }
+      }
+    }
+
+    function getPersianTimestamp() {
+      try {
+        return new Date().toLocaleString('fa-IR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      } catch (_) {
+        return new Date().toLocaleString();
+      }
+    }
+
+    function buildExperimentSummaryText(actionLabel) {
+      const activeParts = [];
+      if (circuit.R > 0) activeParts.push('R');
+      if (circuit.L_mH > 0) activeParts.push('L');
+      if (circuit.C_uF > 0) activeParts.push('C');
+      const topo = activeParts.length > 0 ? activeParts.join('') : 'اتصال کوتاه';
+
+      if (!circuit.switchClosed) {
+        return `[${actionLabel}] کلید مدار قطع است. V=${circuit.V}V, f=${circuit.f}Hz, R=${circuit.R}Ω, L=${circuit.L_mH}mH, C=${circuit.C_uF}µF.`;
+      }
+      if (circuit.isShortCircuit) {
+        return `[${actionLabel}] اتصال کوتاه در مدار!`;
+      }
+
+      const modeLabel = circuit.isDC ? 'جریان مستقیم DC' : circuit.mode === 'resonance' ? 'تشدید' : circuit.mode === 'inductive' ? 'سلفی' : circuit.mode === 'capacitive' ? 'خازنی' : 'اهمی';
+
+      return `[${actionLabel}] مدار ${topo} (${modeLabel}): ` +
+        `منبع ${circuit.V}V / ${circuit.f}Hz | قطعات: R=${circuit.R}Ω, L=${circuit.L_mH}mH, C=${circuit.C_uF}µF | ` +
+        `نتایج: I=${circuit.I.toFixed(2)}A, Z=${circuit.Z.toFixed(2)}Ω, φ=${circuit.phiDeg.toFixed(1)}° | ` +
+        `ولتاژها: VR=${circuit.VR.toFixed(1)}V, VL=${circuit.VL.toFixed(1)}V, VC=${circuit.VC.toFixed(1)}V | ` +
+        `توان‌ها: P=${circuit.P.toFixed(1)}W, S=${circuit.S.toFixed(1)}VA, cosφ=${circuit.pf.toFixed(2)}.`;
+    }
+
+    async function saveLogRecord(type, summaryText) {
+      const record = {
+        studentName: currentStudent.name || 'دانش‌آموز مهمان',
+        studentGroup: currentStudent.group || 'بدون گروه',
+        type,
+        summary: summaryText,
+        persianTime: getPersianTimestamp(),
+        timestamp: Date.now()
+      };
+
+      if (isFirebaseReady && db) {
+        try {
+          const logsCol = collection(db, 'artifacts', appId, 'public', 'data', 'experiment_logs');
+          await addDoc(logsCol, record);
+          return;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      localFallbackLogs.unshift(record);
+      try {
+        localStorage.setItem('rlc_lab_logs', JSON.stringify(localFallbackLogs.slice(0, 300)));
+      } catch (_) {}
+      renderTeacherLogs();
+    }
+
+    function scheduleAutoLog() {
+      if (!currentStudent.name) return;
+      clearTimeout(autoLogDebounceTimer);
+      autoLogDebounceTimer = setTimeout(() => {
+        const sig = `${circuit.V}-${circuit.f}-${circuit.R}-${circuit.L_mH}-${circuit.C_uF}-${circuit.switchClosed}`;
+        if (sig === lastAutoLoggedSignature) return;
+        lastAutoLoggedSignature = sig;
+        saveLogRecord('auto', buildExperimentSummaryText('تغییر پارامتر'));
+      }, 2500);
+    }
+
+    window.manualLogExperiment = async function() {
+      const summary = buildExperimentSummaryText('ثبت دستی آزمایش');
+      await saveLogRecord('manual', summary);
+      showToast('نتایج آزمایش با موفقیت ثبت شد.', 'success');
+    };
+
+    document.getElementById('student-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nameVal = document.getElementById('student-name-input').value.trim();
+      const groupVal = document.getElementById('student-group-input').value.trim();
+      if (!nameVal) return;
+
+      currentStudent.name = nameVal;
+      currentStudent.group = groupVal || 'عمومی';
+      currentStudent.loginTime = getPersianTimestamp();
+
+      document.getElementById('header-student-name').textContent = currentStudent.name;
+      document.getElementById('login-screen').classList.add('hidden');
+
+      await saveLogRecord('login', `ورود دانش‌آموز «${currentStudent.name}» (${currentStudent.group}) به آزمایشگاه.`);
+      showToast(`خوش آمدید ${currentStudent.name}! ورود شما ثبت شد.`, 'success');
+      resizeAllCanvases();
+    });
+
+    window.switchStudent = function() {
+      document.getElementById('login-screen').classList.remove('hidden');
+    };
+
+    window.openTeacherPanel = function() {
+      document.getElementById('teacher-password-input').value = '';
+      toggleModal('teacher-auth-modal', true);
+    };
+
+    window.openTeacherModalDirect = function() {
+      openTeacherPanel();
+    };
+
+    document.getElementById('teacher-password-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entered = document.getElementById('teacher-password-input').value;
+      if (entered === teacherPassword) {
+        toggleModal('teacher-auth-modal', false);
+        toggleModal('teacher-dashboard-modal', true);
+        renderTeacherLogs();
+        showToast('ورود به پنل استاد تایید شد.', 'success');
+      } else {
+        showToast('رمز عبور استاد اشتباه است!', 'error');
+      }
+    });
+
+    window.changeTeacherPassword = async function() {
+      const newPass = document.getElementById('new-teacher-pass').value.trim();
+      if (newPass.length < 3) {
+        showToast('رمز جدید باید حداقل ۳ کاراکتر باشد.', 'error');
+        return;
+      }
+      teacherPassword = newPass;
+      localStorage.setItem('rlc_teacher_pass', newPass);
+
+      if (isFirebaseReady && db) {
+        try {
+          const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'teacher');
+          await setDoc(settingsRef, { password: newPass }, { merge: true });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      document.getElementById('new-teacher-pass').value = '';
+      showToast('رمز عبور استاد تغییر کرد.', 'success');
+    };
+
+    function getActiveLogsList() {
+      return isFirebaseReady ? allServerLogs : localFallbackLogs;
+    }
+
+    window.renderTeacherLogs = function() {
+      const container = document.getElementById('teacher-logs-container');
+      const filterSelect = document.getElementById('filter-student-select');
+      if (!container || !filterSelect) return;
+
+      const logs = getActiveLogsList();
+      const uniqueStudents = [...new Set(logs.map(l => l.studentName).filter(Boolean))];
+
+      const currentFilter = filterSelect.value;
+      filterSelect.innerHTML = `<option value="ALL">همه دانش‌آموزان (${uniqueStudents.length} نفر)</option>` +
+        uniqueStudents.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      if (uniqueStudents.includes(currentFilter)) {
+        filterSelect.value = currentFilter;
+      }
+
+      const selectedStudent = filterSelect.value;
+      const filteredLogs = selectedStudent === 'ALL'
+        ? logs
+        : logs.filter(l => l.studentName === selectedStudent);
+
+      document.getElementById('stat-total-students').textContent = uniqueStudents.length;
+      document.getElementById('stat-total-logs').textContent = logs.length;
+
+      if (filteredLogs.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-slate-500 py-12">
+            <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
+            <p class="text-sm">هنوز گزارشی ثبت نشده است.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredLogs.map(log => `
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-3.5 space-y-1.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/60 pb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full ${log.type === 'login' ? 'bg-sky-400' : log.type === 'manual' ? 'bg-emerald-450 text-emerald-400' : 'bg-amber-400'}"></span>
+              <strong class="text-white text-xs sm:text-sm">${escapeHtml(log.studentName)}</strong>
+              <span class="text-[10px] bg-slate-900 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">${escapeHtml(log.studentGroup)}</span>
+            </div>
+            <span class="ltr-num text-[11px] text-slate-400">${escapeHtml(log.persianTime)}</span>
+          </div>
+          <p class="text-xs text-slate-200 leading-relaxed ltr-num font-mono bg-slate-950/60 p-2.5 rounded-lg border border-slate-900">
+            ${escapeHtml(log.summary)}
+          </p>
+        </div>
+      `).join('');
+    };
+
+    window.exportAllReportsText = function() {
+      const logs = getActiveLogsList();
+      if (logs.length === 0) {
+        showToast('گزارشی برای دانلود وجود ندارد.', 'error');
+        return;
+      }
+      const textContent = logs.map(l => `[${l.persianTime}] ${l.studentName} (${l.studentGroup}) - ${l.type}:\n${l.summary}\n-----------------------------------`).join('\n');
+      const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `RLC_Lab_Reports_${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('فایل گزارش متنی دانلود شد.', 'success');
+    };
+
+    window.copyAllReportsText = function() {
+      const logs = getActiveLogsList();
+      if (logs.length === 0) {
+        showToast('گزارشی برای کپی وجود ندارد.', 'error');
+        return;
+      }
+      const textContent = logs.map(l => `[${l.persianTime}] ${l.studentName} (${l.studentGroup}): ${l.summary}`).join('\n');
+      const success = document.execCommand ? false : false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textContent).then(() => {
+          showToast('گزارش‌ها در کلیپ‌بورد کپی شد.', 'success');
+        }).catch(() => {
+          fallbackCopyText(textContent);
+        });
+      } else {
+        fallbackCopyText(textContent);
+      }
+    };
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('گزارش‌ها کپی شدند.', 'success');
+      } catch (_) {
+        showToast('امکان کپی خودکار وجود ندارد.', 'error');
+      }
+      document.body.removeChild(ta);
+    }
+
+    window.copyShareUrl = function() {
+      const url = window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('لینک آزمایشگاه در کلیپ‌بورد کپی شد.', 'success');
+        }).catch(() => fallbackCopyText(url));
+      } else {
+        fallbackCopyText(url);
+      }
+    };
+
+    function drawPowerPill(ctx, cx, cy, text, bgColor, borderColor, textColor) {
+      ctx.save();
+      ctx.font = 'bold 11px Vazirmatn, sans-serif';
+      const metrics = ctx.measureText(text);
+      const padX = 8;
+      const boxW = metrics.width + padX * 2;
+      const boxH = 22;
+
+      ctx.fillStyle = bgColor;
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, cx, cy + 0.5);
+      ctx.restore();
+    }
+
+    function drawSchematic() {
+      const rect = schematicCanvas.parentElement.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return;
+
+      const ctx = schematicCtx;
+      ctx.clearRect(0, 0, w, h);
+
+      const leftX = Math.max(48, w * 0.12);
+      const rightX = Math.min(w - 48, w * 0.88);
+      const topY = Math.max(42, h * 0.22);
+      const botY = Math.min(h - 45, h * 0.78);
+      const midY = (topY + botY) / 2;
+
+      const spanW = rightX - leftX;
+      const swCenterX = leftX + spanW * 0.34;
+      const ammCenterX = leftX + spanW * 0.72;
+      const rCenterX = leftX + spanW * 0.20;
+      const lCenterX = leftX + spanW * 0.52;
+      const cCenterX = leftX + spanW * 0.82;
+
+      const wireColor = circuit.switchClosed ? '#38bdf8' : '#475569';
+
+      ctx.strokeStyle = wireColor;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(leftX, midY - 24);
+      ctx.lineTo(leftX, topY);
+      ctx.lineTo(swCenterX - 24, topY);
+
+      ctx.moveTo(swCenterX + 24, topY);
+      ctx.lineTo(ammCenterX - 20, topY);
+
+      ctx.moveTo(ammCenterX + 20, topY);
+      ctx.lineTo(rightX, topY);
+      ctx.lineTo(rightX, botY);
+
+      ctx.moveTo(rightX, botY);
+      ctx.lineTo(cCenterX + 12, botY);
+
+      ctx.moveTo(cCenterX - 12, botY);
+      ctx.lineTo(lCenterX + 34, botY);
+
+      ctx.moveTo(lCenterX - 34, botY);
+      ctx.lineTo(rCenterX + 32, botY);
+
+      ctx.moveTo(rCenterX - 32, botY);
+      ctx.lineTo(leftX, botY);
+      ctx.lineTo(leftX, midY + 24);
+      ctx.stroke();
+
+      if (circuit.switchClosed && circuit.I > 0.001) {
+        const perimeter = 2 * spanW + 2 * (botY - topY);
+        const dotCount = 22;
+        const maxSwing = Math.min(26, 8 + circuit.I * 3.5);
+        const swingOffset = circuit.isDC
+          ? dcFlowOffset
+          : Math.sin(animPhase - circuit.phiRad) * maxSwing;
+
+        for (let i = 0; i < dotCount; i++) {
+          let dist = ((i / dotCount) * perimeter + swingOffset) % perimeter;
+          if (dist < 0) dist += perimeter;
+
+          let px = leftX;
+          let py = topY;
+          const sideH = botY - topY;
+
+          if (dist < spanW) {
+            px = leftX + dist;
+            py = topY;
+          } else if (dist < spanW + sideH) {
+            px = rightX;
+            py = topY + (dist - spanW);
+          } else if (dist < 2 * spanW + sideH) {
+            px = rightX - (dist - (spanW + sideH));
+            py = botY;
+          } else {
+            px = leftX;
+            py = botY - (dist - (2 * spanW + sideH));
+          }
+
+          const inSource = Math.hypot(px - leftX, py - midY) < 26;
+          const inSwitch = Math.abs(px - swCenterX) < 26 && Math.abs(py - topY) < 12;
+          const inAmmeter = Math.hypot(px - ammCenterX, py - topY) < 22;
+
+          if (!inSource && !inSwitch && !inAmmeter) {
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(px, py, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // منبع
+      ctx.save();
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = circuit.isDC ? '#f59e0b' : '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(leftX, midY, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      if (circuit.isDC) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 13px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('+', leftX, midY - 7);
+        ctx.fillText('−', leftX, midY + 8);
+      } else {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let dx = -10; dx <= 10; dx += 2) {
+          const sy = midY - Math.sin((dx / 10) * Math.PI) * 6;
+          if (dx === -10) ctx.moveTo(leftX + dx, sy);
+          else ctx.lineTo(leftX + dx, sy);
+        }
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = circuit.isDC ? '#fde68a' : '#bae6fd';
+      ctx.font = 'bold 10px Vazirmatn, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(circuit.isDC ? 'منبع DC' : 'منبع AC', leftX, midY - 28);
+      ctx.fillStyle = circuit.isDC ? '#fbbf24' : '#38bdf8';
+      ctx.fillText(circuit.isDC ? `${circuit.V}V` : `${circuit.V}V / ${circuit.f}Hz`, leftX, midY + 34);
+      ctx.restore();
+
+      // کلید
+      ctx.save();
+      ctx.fillStyle = circuit.switchClosed ? '#10b981' : '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(swCenterX - 22, topY, 3.5, 0, Math.PI * 2);
+      ctx.arc(swCenterX + 22, topY, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = circuit.switchClosed ? '#10b981' : '#f43f5e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(swCenterX - 22, topY);
+      if (circuit.switchClosed) {
+        ctx.lineTo(swCenterX + 22, topY);
+      } else {
+        ctx.lineTo(swCenterX + 16, topY - 18);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = circuit.switchClosed ? '#6ee7b7' : '#fda4af';
+      ctx.font = 'bold 10px Vazirmatn, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(circuit.switchClosed ? 'کلید (وصل)' : 'کلید (قطع)', swCenterX, topY - 24);
+      ctx.restore();
+
+      // آمپرمتر
+      ctx.save();
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.arc(ammCenterX, topY, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 13px Vazirmatn, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('A', ammCenterX, topY);
+
+      ctx.font = 'bold 10px Vazirmatn, sans-serif';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(`${circuit.I.toFixed(2)} A`, ammCenterX, topY - 24);
+      ctx.restore();
+
+      // مقاومت R
+      ctx.save();
+      if (circuit.R > 0) {
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const rStart = rCenterX - 28;
+        ctx.moveTo(rStart, botY);
+        const zigSteps = 6;
+        const stepW = 56 / zigSteps;
+        for (let i = 0; i < zigSteps; i++) {
+          const zx = rStart + i * stepW + stepW / 2;
+          const zy = botY + (i % 2 === 0 ? -10 : 10);
+          ctx.lineTo(zx, zy);
+        }
+        ctx.lineTo(rCenterX + 28, botY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#fde68a';
+        ctx.font = 'bold 10px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`R = ${circuit.R} Ω`, rCenterX, botY - 20);
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.fillText(`VR = ${circuit.VR.toFixed(1)} V`, rCenterX, botY + 20);
+      } else {
+        ctx.strokeStyle = wireColor;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(rCenterX - 28, botY);
+        ctx.lineTo(rCenterX + 28, botY);
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('R حذف شده', rCenterX, botY + 16);
+      }
+      ctx.restore();
+
+      // سلف L
+      ctx.save();
+      if (circuit.L_mH > 0) {
+        ctx.strokeStyle = '#34d399';
+        ctx.lineWidth = 2.5;
+        const coils = 4;
+        const coilR = 56 / (coils * 2);
+        const lStart = lCenterX - 28;
+        for (let i = 0; i < coils; i++) {
+          ctx.beginPath();
+          ctx.arc(lStart + coilR + i * coilR * 2, botY, coilR, Math.PI, 0, false);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#a7f3d0';
+        ctx.font = 'bold 10px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`L = ${circuit.L_mH} mH`, lCenterX, botY - 20);
+        ctx.fillStyle = '#34d399';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.fillText(`VL = ${circuit.VL.toFixed(1)} V`, lCenterX, botY + 20);
+      } else {
+        ctx.strokeStyle = wireColor;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(lCenterX - 28, botY);
+        ctx.lineTo(lCenterX + 28, botY);
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('L حذف شده', lCenterX, botY + 16);
+      }
+      ctx.restore();
+
+      // خازن C
+      ctx.save();
+      if (circuit.C_uF > 0) {
+        ctx.strokeStyle = '#fb7185';
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        ctx.moveTo(cCenterX - 10, botY - 14);
+        ctx.lineTo(cCenterX - 10, botY + 14);
+        ctx.moveTo(cCenterX + 10, botY - 14);
+        ctx.lineTo(cCenterX + 10, botY + 14);
+        ctx.stroke();
+
+        ctx.fillStyle = '#fecdd3';
+        ctx.font = 'bold 10px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`C = ${circuit.C_uF} µF`, cCenterX, botY - 20);
+        ctx.fillStyle = '#fb7185';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.fillText(`VC = ${circuit.VC.toFixed(1)} V`, cCenterX, botY + 20);
+      } else {
+        ctx.strokeStyle = wireColor;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(cCenterX - 10, botY);
+        ctx.lineTo(cCenterX + 10, botY);
+        ctx.stroke();
+        ctx.fillStyle = '#64748b';
+        ctx.font = '9px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('C حذف شده', cCenterX, botY + 16);
+      }
+      ctx.restore();
+
+      if (showPowerOnLab && !circuit.isShortCircuit && !circuit.isOpenByCapacitor) {
+        const QL = circuit.I * circuit.I * circuit.XL;
+        const QC = circuit.I * circuit.I * circuit.XC;
+
+        if (circuit.R > 0) {
+          drawPowerPill(ctx, rCenterX, botY - 42, `P = ${circuit.P.toFixed(1)} W`, 'rgba(245, 158, 11, 0.2)', '#f59e0b', '#fde68a');
+        }
+        if (circuit.L_mH > 0) {
+          drawPowerPill(ctx, lCenterX, botY - 42, `QL = +${QL.toFixed(1)} VAR`, 'rgba(16, 185, 129, 0.2)', '#10b981', '#a7f3d0');
+        }
+        if (circuit.C_uF > 0) {
+          drawPowerPill(ctx, cCenterX, botY - 42, `QC = -${QC.toFixed(1)} VAR`, 'rgba(244, 63, 94, 0.2)', '#f43f5e', '#fecdd3');
+        }
+        drawPowerPill(ctx, leftX + 70, midY - 14, `S = ${circuit.S.toFixed(1)} VA`, 'rgba(56, 189, 248, 0.2)', '#38bdf8', '#bae6fd');
+        drawPowerPill(ctx, leftX + 70, midY + 14, `cosφ = ${circuit.pf.toFixed(2)}`, 'rgba(168, 85, 247, 0.2)', '#a855f7', '#e9d5ff');
+      }
+    }
+
+    window.updatePhasorMode = function() {
+      const mode = document.getElementById('phasor-mode-select').value;
+      const legend = document.getElementById('phasor-legend');
+
+      if (mode === 'voltage') {
+        legend.innerHTML = `
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> V<sub>R</sub> / جریان I</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> V<sub>L</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span> V<sub>C</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> V<sub>total</sub></span>
+        `;
+      } else if (mode === 'impedance') {
+        legend.innerHTML = `
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> مقاومت ثابت R</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> X<sub>L</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span> X<sub>C</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span> امپدانس Z</span>
+        `;
+      } else {
+        legend.innerHTML = `
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> P (W)</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Q<sub>L</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span> Q<sub>C</sub></span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> S (VA)</span>
+        `;
+      }
+    };
+
+    window.togglePhasorRotation = function() {
+      phasorRotating = !phasorRotating;
+      const icon = document.getElementById('phasor-spin-icon');
+      const txt = document.getElementById('phasor-spin-text');
+      if (phasorRotating) {
+        icon.className = "fa-solid fa-pause";
+        txt.textContent = "توقف";
+      } else {
+        icon.className = "fa-solid fa-play";
+        txt.textContent = "چرخش";
+        phasorSpinAngle = 0;
+      }
+    };
+
+    function drawArrowHead(ctx, x, y, angle, size, color) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-size, -size * 0.5);
+      ctx.lineTo(-size, size * 0.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawVectorArrow(ctx, x1, y1, x2, y2, color, label, lineWidth = 2.5, dashed = false) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.hypot(dx, dy);
+      if (len < 2) return;
+
+      const angle = Math.atan2(dy, dx);
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      if (dashed) ctx.setLineDash([4, 4]);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      drawArrowHead(ctx, x2, y2, angle, 8, color);
+
+      if (label) {
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px Vazirmatn, sans-serif';
+        const offsetX = Math.cos(angle) * 13;
+        const offsetY = Math.sin(angle) * 13;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, x2 + offsetX, y2 + offsetY);
+      }
+      ctx.restore();
+    }
+
+    function drawPhasorDiagram() {
+      const rect = phasorCanvas.parentElement.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return;
+
+      const ctx = phasorCtx;
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w * 0.45;
+      const cy = h * 0.52;
+      const maxRadius = Math.min(w * 0.35, h * 0.37);
+
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.45)';
+      ctx.lineWidth = 1;
+      [0.33, 0.66, 1.0].forEach(ratio => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, maxRadius * ratio, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      ctx.beginPath();
+      ctx.moveTo(15, cy);
+      ctx.lineTo(w - 15, cy);
+      ctx.moveTo(cx, 15);
+      ctx.lineTo(cx, h - 15);
+      ctx.stroke();
+
+      const mode = document.getElementById('phasor-mode-select').value;
+      const rot = phasorRotating ? phasorSpinAngle : 0;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-rot);
+
+      if (!circuit.switchClosed && mode !== 'impedance') {
+        ctx.restore();
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px Vazirmatn, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('کلید مدار قطع است', w / 2 - cx, h / 2 - cy);
+        return;
+      }
+
+      if (mode === 'voltage') {
+        const maxVal = Math.max(circuit.V, circuit.VR, circuit.VL, circuit.VC, 1);
+        const scale = maxRadius / maxVal;
+
+        const vrLen = circuit.VR * scale;
+        const vlLen = circuit.VL * scale;
+        const vcLen = circuit.VC * scale;
+        const vNetY = (circuit.VL - circuit.VC) * scale;
+
+        drawVectorArrow(ctx, 0, 0, maxRadius * 0.5, 0, 'rgba(251, 191, 36, 0.45)', 'I', 2, true);
+        drawVectorArrow(ctx, 0, 0, vrLen, 0, '#fbbf24', `VR`, 3);
+        drawVectorArrow(ctx, 0, 0, 0, -vlLen, '#34d399', `VL`, 2.5);
+        drawVectorArrow(ctx, 0, 0, 0, vcLen, '#fb7185', `VC`, 2.5);
+
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(vrLen, 0);
+        ctx.lineTo(vrLen, -vNetY);
+        ctx.lineTo(0, -vNetY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        drawVectorArrow(ctx, 0, 0, vrLen, -vNetY, '#38bdf8', `V کل`, 3.5);
+
+      } else if (mode === 'impedance') {
+        // اصلاح کلیدی: در مثلث امپدانس، مقاومت R مقدار ثابتی است و با تغییر فرکانس تغییر نمی‌کند.
+        // مقیاس بر اساس بیشترین مقدار بین R، XL، XC و Z محاسبه می‌شود.
+        const maxVal = Math.max(circuit.Z, circuit.R, circuit.XL, circuit.XC, 1);
+        const scale = maxRadius / maxVal;
+
+        const rLen = circuit.R * scale;
+        const xlLen = circuit.XL * scale;
+        const xcLen = circuit.XC * scale;
+        const xNetY = (circuit.XL - circuit.XC) * scale;
+
+        drawVectorArrow(ctx, 0, 0, rLen, 0, '#fbbf24', `R`, 3);
+        drawVectorArrow(ctx, 0, 0, 0, -xlLen, '#34d399', `XL`, 2.5);
+        drawVectorArrow(ctx, 0, 0, 0, xcLen, '#fb7185', `XC`, 2.5);
+
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(rLen, 0);
+        ctx.lineTo(rLen, -xNetY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        drawVectorArrow(ctx, 0, 0, rLen, -xNetY, '#a855f7', `Z`, 3.5);
+
+      } else if (mode === 'power') {
+        const QL = circuit.I * circuit.I * circuit.XL;
+        const QC = circuit.I * circuit.I * circuit.XC;
+        const maxVal = Math.max(circuit.S, circuit.P, QL, QC, 1);
+        const scale = maxRadius / maxVal;
+
+        const pLen = circuit.P * scale;
+        const qlLen = QL * scale;
+        const qcLen = QC * scale;
+        const qNetY = circuit.Q * scale;
+
+        drawVectorArrow(ctx, 0, 0, pLen, 0, '#fbbf24', `P`, 3);
+        drawVectorArrow(ctx, 0, 0, 0, -qlLen, '#34d399', `QL`, 2.5);
+        drawVectorArrow(ctx, 0, 0, 0, qcLen, '#fb7185', `QC`, 2.5);
+
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(pLen, 0);
+        ctx.lineTo(pLen, -qNetY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        drawVectorArrow(ctx, 0, 0, pLen, -qNetY, '#38bdf8', `S`, 3.5);
+      }
+
+      ctx.restore();
+    }
+
+    function drawOscilloscope() {
+      const rect = scopeCanvas.parentElement.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return;
+
+      const ctx = scopeCtx;
+      ctx.clearRect(0, 0, w, h);
+
+      const midY = h / 2;
+
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.35)';
+      ctx.lineWidth = 1;
+      const cols = 10;
+      const rows = 6;
+      for (let i = 1; i < cols; i++) {
+        const gx = (w / cols) * i;
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, h);
+        ctx.stroke();
+      }
+      for (let j = 1; j < rows; j++) {
+        const gy = (h / rows) * j;
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(w, gy);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, midY);
+      ctx.lineTo(w, midY);
+      ctx.stroke();
+
+      const cycles = 2.5;
+      const vAmp = (circuit.V / 240) * (h * 0.38);
+      const iAmp = circuit.switchClosed && Number.isFinite(circuit.I)
+        ? Math.min(h * 0.36, Math.max(circuit.I > 0 ? 10 : 0, (circuit.I / 6) * (h * 0.34)))
+        : 0;
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      if (circuit.isDC) {
+        const yDC = midY - vAmp * 0.75;
+        ctx.moveTo(0, yDC);
+        ctx.lineTo(w, yDC);
+      } else {
+        for (let x = 0; x <= w; x += 2) {
+          const theta = (x / w) * cycles * Math.PI * 2 - animPhase;
+          const y = midY - Math.sin(theta) * vAmp;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+
+      if (circuit.switchClosed) {
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        if (circuit.isDC) {
+          const yIDC = midY - iAmp * 0.75;
+          ctx.moveTo(0, yIDC);
+          ctx.lineTo(w, yIDC);
+        } else {
+          for (let x = 0; x <= w; x += 2) {
+            const theta = (x / w) * cycles * Math.PI * 2 - animPhase - circuit.phiRad;
+            const y = midY - Math.sin(theta) * iAmp;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+      }
+    }
+
+    function animationLoop(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const dt = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (circuit.isDC) {
+        if (circuit.switchClosed && Number.isFinite(circuit.I) && circuit.I > 0) {
+          const dcSpeed = Math.min(260, 40 + circuit.I * 35);
+          dcFlowOffset = (dcFlowOffset + dcSpeed * dt) % 10000;
+        }
+      } else {
+        const visualOmega = 2.2 + Math.log10(circuit.f / 10 + 1) * 2.5;
+        animPhase = (animPhase + visualOmega * dt) % (Math.PI * 2);
+
+        if (phasorRotating) {
+          phasorSpinAngle = (phasorSpinAngle + visualOmega * 0.6 * dt) % (Math.PI * 2);
+        }
+      }
+
+      drawSchematic();
+      drawPhasorDiagram();
+      drawOscilloscope();
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    window.toggleModal = function(modalId, show) {
+      const el = document.getElementById(modalId);
+      if (!el) return;
+      if (show) {
+        el.classList.remove('hidden');
+        if (modalId === 'guide-modal') {
+          const urlInput = document.getElementById('share-url-input');
+          if (urlInput) urlInput.value = window.location.href;
+        }
+      } else {
+        el.classList.add('hidden');
+      }
+    };
+
+    window.showToast = function(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      let colors = 'bg-slate-800 border-sky-500/50 text-sky-100';
+      let icon = 'fa-circle-info text-sky-400';
+
+      if (type === 'success') {
+        colors = 'bg-slate-900 border-emerald-500/60 text-emerald-100';
+        icon = 'fa-circle-check text-emerald-400';
+      } else if (type === 'error') {
+        colors = 'bg-slate-900 border-rose-500/60 text-rose-100';
+        icon = 'fa-circle-exclamation text-rose-400';
+      }
+
+      toast.className = `pointer-events-auto border ${colors} px-4 py-3 rounded-xl shadow-xl backdrop-blur-md text-xs font-medium flex items-center gap-2.5 transition-all duration-300`;
+      toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    window.addEventListener('load', () => {
+      calculateCircuit();
+      resizeAllCanvases();
+      initCloudBackend();
+      requestAnimationFrame(animationLoop);
+    });
+  </script>
+</body>
+</html>
