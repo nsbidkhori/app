@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     فایل نهایی بازی کسرها — برای انتشار با نام index.html ذخیره کنید
+     قبل از آپلود: رمز معلم و توکن تلگرام را در بخش تنظیمات پایین بگذارید
+     ============================================================ -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>بازی کسرها | ریاضی دبستان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{direction:rtl}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;min-height:100vh;overflow-x:hidden;
+  background:linear-gradient(180deg,#FFB75E 0%,#FFD98E 40%,#FFF3D6 100%);
+  user-select:none;-webkit-user-select:none;
+}
+.fs{position:fixed;font-family:'Lalezar';color:rgba(255,255,255,.6);z-index:0;pointer-events:none;
+  text-shadow:0 2px 0 rgba(190,120,40,.2);animation:float 7s ease-in-out infinite}
+.fs1{top:12%;right:5%;font-size:3rem}.fs2{top:30%;left:6%;font-size:2.4rem;animation-delay:-2s}
+.fs3{top:64%;right:9%;font-size:2.2rem;animation-delay:-4s}.fs4{top:8%;left:26%;font-size:2rem;animation-delay:-1s}
+.fs5{top:78%;left:20%;font-size:2.6rem;animation-delay:-3s}.fs6{top:48%;right:30%;font-size:1.8rem;animation-delay:-5s}
+@keyframes float{50%{transform:translateY(-18px) rotate(8deg)}}
+
+.topbar{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  justify-content:space-between;padding:14px 16px;max-width:1000px;margin:0 auto}
+.logo{font-family:'Lalezar';font-size:clamp(1.4rem,4.5vw,2rem);text-shadow:0 2px 0 #fff;cursor:pointer}
+.logo .t1{color:#E85D4A}.logo .t2{color:#0E9594}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{background:#fff;border:3px solid #A06CD5;color:#6B3FA0;border-radius:999px;
+  padding:.35rem .9rem;font-weight:800;font-size:.9rem}
+.tbtn{font-family:'Lalezar';font-size:1rem;border:none;border-radius:12px;color:#fff;cursor:pointer;
+  padding:.45rem .9rem;min-height:44px;box-shadow:0 4px 0 var(--bd);transition:.15s}
+.tbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--bd)}
+.yellow{--bd:#C77F00;background:#FFB020}.teal{--bd:#0B7271;background:#12A5A4}
+.coral{--bd:#B23A3A;background:#FF6B6B}.green{--bd:#1F8A4C;background:#2ECC71}
+.purple{--bd:#6B3FA0;background:#A06CD5}
+.hidden{display:none!important}
+
+main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:6px 14px 60px}
+.screen{animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}}
+.card{background:#fff;border-radius:26px;padding:26px 22px;box-shadow:0 10px 0 rgba(160,90,30,.18);
+  border:4px solid #FFD93D;text-align:center}
+.login-card{border-color:#12A5A4;max-width:540px;margin:6vh auto 0}
+.mascot{font-size:4.2rem;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-6deg)}}
+.card h2{font-family:'Lalezar';font-weight:400;color:#7A4A1F;font-size:clamp(1.5rem,5vw,2.2rem);margin:6px 0}
+.card p.sub{color:#8A6234;font-weight:600;line-height:1.9}
+#inpName{width:100%;max-width:340px;margin:18px auto 12px;display:block;border:3px solid #57B7EC;
+  border-radius:16px;padding:.85rem 1rem;font-family:'Vazirmatn';font-weight:700;font-size:1.05rem;
+  text-align:center;color:#7A4A1F;background:#F2FAFF;outline:none;transition:.2s}
+#inpName:focus{border-color:#F4A300;background:#fff;box-shadow:0 0 0 4px rgba(244,163,0,.25)}
+.big-btn{font-family:'Lalezar';font-size:1.25rem;border:none;border-radius:18px;color:#fff;cursor:pointer;
+  padding:.8rem 2.2rem;min-height:52px;box-shadow:0 6px 0 var(--bd);transition:.15s;margin:6px 4px}
+.big-btn:hover{transform:translateY(-2px)}
+.big-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--bd)}
+.hint{margin-top:14px;font-size:.88rem;color:#8A6234;font-weight:600;background:#FFF9E3;
+  border:2.5px dashed #F4A300;border-radius:14px;padding:10px 12px;line-height:1.9}
+
+.game-top{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.info-chip{background:#fff;border:3px solid #57B7EC;color:#23506B;border-radius:999px;
+  padding:.35rem 1rem;font-weight:800;font-size:.95rem}
+.info-chip.score{border-color:#2ECC71;color:#1F8A4C}
+.info-chip.stage{border-color:#A06CD5;color:#6B3FA0}
+.info-chip.speed{border-color:#F4A300;color:#C77F00}
+.info-chip.time{border-color:#FF6B6B;color:#C0392B}
+.info-chip.time.danger{animation:blink .5s infinite}
+@keyframes blink{50%{transform:scale(1.12);background:#FFE3E3}}
+
+.tbar{height:16px;background:#fff;border:3px solid #E8B06B;border-radius:999px;overflow:hidden;
+  max-width:560px;margin:0 auto 12px}
+#tfill{height:100%;width:100%;border-radius:999px;transition:width .1s linear}
+#tfill.g{background:linear-gradient(90deg,#2ECC71,#A8E063)}
+#tfill.o{background:linear-gradient(90deg,#FFB020,#FFD93D)}
+#tfill.r{background:linear-gradient(90deg,#FF6B6B,#FF8E8E)}
+
+.dots{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:0 0 14px}
+.dot{width:16px;height:16px;border-radius:50%;background:#fff;border:2.5px solid #E8B06B;transition:.25s}
+.dot.cur{transform:scale(1.35);background:#FFF3C4;border-color:#F4A300}
+.dot.ok{background:#2ECC71;border-color:#1F8A4C}
+.dot.bad{background:#FF6B6B;border-color:#B23A3A}
+.q-card{border-color:#FFD93D}
+.q-label{font-weight:800;color:#8A6234;font-size:1.05rem}
+
+#visual{direction:ltr;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;
+  background:#FFF9E3;border:3px dashed #F4A300;border-radius:18px;padding:16px 10px;margin:14px auto;
+  max-width:660px;font-family:'Lalezar';font-size:clamp(1.5rem,5.5vw,2.3rem);color:#5B3A1E}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 5px;line-height:1}
+.frac b{font-weight:400;padding:0 8px 3px;font-size:1em}
+.frac i{font-style:normal;border-top:3.5px solid #5B3A1E;padding:3px 8px 0;font-size:1em}
+.op{margin:0 6px}
+.cmp{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.cmp-side{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cmp-mid{font-size:2.2rem;color:#C0392B;background:#fff;border:3px dashed #C0392B;border-radius:50%;
+  width:56px;height:56px;display:flex;align-items:center;justify-content:center}
+#visual svg{display:block}
+
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;max-width:560px;margin:0 auto}
+.opt{font-family:'Lalezar';font-size:1.5rem;border-radius:18px;cursor:pointer;min-height:74px;
+  border:3.5px solid;transition:.15s;color:#5B3A1E;background:#fff;
+  display:flex;align-items:center;justify-content:center}
+.opt .frac{font-size:.95em}
+.opt:nth-child(1){border-color:#57B7EC;background:#EAF6FF}
+.opt:nth-child(2){border-color:#67C25C;background:#EFFBEA}
+.opt:nth-child(3){border-color:#FFA23E;background:#FFF3E4}
+.opt:hover:not(:disabled){transform:translateY(-3px) scale(1.03)}
+.opt:disabled{cursor:default;opacity:.8}
+.opt.correct{background:#2ECC71!important;border-color:#1F8A4C!important;color:#fff!important;animation:pop .45s}
+.opt.correct .frac i{border-color:#fff}
+.opt.wrong{background:#FF6B6B!important;border-color:#B23A3A!important;color:#fff!important;animation:shake .45s}
+@keyframes pop{40%{transform:scale(1.12)}}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.feedback{margin:16px auto 0;max-width:560px;border-radius:16px;padding:12px 14px;font-weight:800;
+  font-size:1.02rem;border:3px dashed;line-height:1.8}
+.feedback.good{background:#DFF7E7;border-color:#2ECC71;color:#1F8A4C}
+.feedback.bad{background:#FFE3E3;border-color:#FF6B6B;color:#C0392B}
+
+.result-card{border-color:#A06CD5;max-width:560px;margin:4vh auto 0}
+.stars{font-size:3rem;letter-spacing:6px;animation:pop .6s}
+#resDetail{color:#8A6234;font-weight:700;line-height:2;margin:8px 0 6px}
+.res-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
+
+.results-card{border-color:#12A5A4;text-align:right}
+.results-card h2{text-align:center}
+.sum-line{text-align:center;color:#8A6234;font-weight:700;margin-bottom:12px}
+.table-wrap{max-height:52vh;overflow:auto;border:3px solid #BFE6EE;border-radius:16px}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:640px}
+th{background:#12A5A4;color:#fff;font-family:'Lalezar';font-weight:400;font-size:1rem;padding:10px 6px;position:sticky;top:0}
+td{padding:10px 6px;text-align:center;color:#23506B;font-weight:700;border-top:2px solid #E1F2F5}
+tr:nth-child(even) td{background:#F3FBFF}
+td.name{color:#6B3FA0;font-weight:800}
+td.pass{color:#1F8A4C}td.fail{color:#C0392B}
+.empty-row{text-align:center;padding:26px;color:#7A99AC;font-weight:700}
+.teacher-note{text-align:center;font-size:.8rem;color:#8AA5B5;margin-top:10px;font-weight:600}
+
+.overlay-pin{position:fixed;inset:0;background:rgba(60,30,10,.55);z-index:95;display:flex;
+  align-items:center;justify-content:center;padding:16px}
+.pin-card{background:#fff;border:4px solid #A06CD5;border-radius:24px;padding:24px 22px;
+  max-width:360px;width:100%;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.3);animation:fadeIn .25s}
+.pin-card.shake{animation:shake .45s}
+.pin-icon{font-size:3rem}
+.pin-card h3{font-family:'Lalezar';font-weight:400;color:#6B3FA0;font-size:1.5rem;margin:4px 0}
+.pin-card p{color:#8A6234;font-weight:600;font-size:.92rem}
+#pinInput{width:100%;max-width:200px;margin:14px auto 10px;display:block;border:3px solid #A06CD5;
+  border-radius:14px;padding:.7rem 1rem;text-align:center;font-size:1.2rem;letter-spacing:6px;
+  font-family:'Vazirmatn';font-weight:800;color:#6B3FA0;background:#F7F2FF;outline:none}
+#pinInput:focus{box-shadow:0 0 0 4px rgba(160,108,213,.25)}
+.pin-err{color:#C0392B;font-weight:800;margin-top:8px}
+.pin-btns{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.pin-btns .big-btn{font-size:1.05rem;padding:.6rem 1.4rem;min-height:46px}
+
+.toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-90px);background:#6B3FA0;color:#fff;
+  font-weight:800;padding:.7rem 1.4rem;border-radius:999px;z-index:70;transition:.35s;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);font-size:.95rem;text-align:center;max-width:92vw}
+.toast.show{transform:translate(-50%,0)}
+
+.confetti{position:fixed;top:-24px;z-index:60;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+.nowrap-warn{padding:30px;text-align:center;font-size:20px;font-weight:800;color:#C0392B;background:#FFE3E3}
+
+@media (max-width:640px){
+  .topbar{justify-content:center}
+  .opts{grid-template-columns:repeat(3,1fr);gap:8px}
+  .opt{font-size:1.2rem;min-height:64px}
+  .big-btn{width:100%;margin:5px 0}
+  .pin-btns .big-btn{width:auto}
+  .card{padding:20px 14px}
+  .fs{display:none}
+  .cmp-mid{width:44px;height:44px;font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+<noscript><div class="nowrap-warn">⚠️ جاوااسکریپت مرورگر شما خاموش است؛ برای اجرای بازی آن را روشن کنید.</div></noscript>
+<script>
+if(!window.Promise||!window.fetch){
+  document.body.innerHTML='<div class="nowrap-warn" style="padding:40px">مرورگر شما خیلی قدیمی است.<br>لطفاً مرورگر Chrome نصب کنید و دوباره باز کنید.</div>';
+}
+</script>
+
+<span class="fs fs1">½</span><span class="fs fs2">⅓</span><span class="fs fs3">¾</span>
+<span class="fs fs4">⅔</span><span class="fs fs5">⅖</span><span class="fs fs6">⅗</span>
+<div class="toast" id="toast"></div>
+
+<header class="topbar">
+  <div class="logo" id="logo">🍕 <span class="t1">بازی</span> <span class="t2">کسرها</span></div>
+  <div class="top-actions">
+    <span id="studentChip" class="chip hidden">👤 ---</span>
+    <button id="btnResults" class="tbtn yellow" title="ورود معلم">🔒</button>
+    <button id="btnSound" class="tbtn teal">🔊</button>
+    <button id="btnExit" class="tbtn coral hidden">🚪 خروج</button>
+  </div>
+</header>
+
+<main>
+  <section id="scr-login" class="screen">
+    <div class="card login-card">
+      <div class="mascot">🐼</div>
+      <h2>سلام قهرمان کسرها! 👋</h2>
+      <p class="sub">اسمت را بنویس و وارد بازی شو.<br>در هر مرحله <b>۱۲ سوال کسرها</b>: جمع و تفریق، کسر برابر، مقایسه، شکل و محور!</p>
+      <input id="inpName" placeholder="نام و نام خانوادگی..." maxlength="30">
+      <button id="btnStart" class="big-btn green">🚀 شروع بازی</button>
+      <p class="hint">💡 یادآوری: در جمع و تفریق کسرهای هم‌مخرج، فقط <b>صورت‌ها</b> را جمع یا کم می‌کنیم؛ مخرج همان می‌ماند!<br>
+      ⚖️ کسر برابر: صورت و مخرج را در یک عدد ضرب کن.<br>
+      ⏱ برای هر سوال ۱۰ ثانیه فرصت داری؛ سریع‌تر = ⚡ امتیاز بیشتر!</p>
+    </div>
+  </section>
+
+  <section id="scr-game" class="screen hidden">
+    <div class="game-top">
+      <div class="info-chip stage">مرحله <b id="stageNo">۱</b></div>
+      <div class="info-chip">سوال <b id="qNo">۱</b> از ۱۲</div>
+      <div class="info-chip time" id="timeChip">⏱ <b id="timeNo">۱۰</b></div>
+      <div class="info-chip score">⭐ امتیاز: <b id="scoreNo">۰</b></div>
+      <div class="info-chip speed">⚡ سرعت: <b id="speedNo">۰</b></div>
+    </div>
+    <div class="tbar"><div id="tfill" class="g"></div></div>
+    <div class="dots" id="dots"></div>
+    <div class="card q-card">
+      <p class="q-label" id="qLabel">حاصل عبارت زیر چند می‌شود؟ 🤔</p>
+      <div id="visual"></div>
+      <div class="opts" id="opts"></div>
+      <div class="feedback hidden" id="feedback"></div>
+      <button class="big-btn purple hidden" id="btnNext">سوال بعدی ⬅</button>
+    </div>
+  </section>
+
+  <section id="scr-result" class="screen hidden">
+    <div class="card result-card">
+      <div class="stars" id="stars"></div>
+      <h2 id="resTitle"></h2>
+      <p id="resDetail"></p>
+      <div class="res-btns">
+        <button id="btnNextStage" class="big-btn green">مرحله بعد 🎯</button>
+        <button id="btnRetry" class="big-btn coral">تلاش دوباره 🔁</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="scr-results" class="screen hidden">
+    <div class="card results-card">
+      <h2>📊 کارنامهٔ دانش‌آموزان</h2>
+      <p class="sum-line" id="sumLine"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>نام</th><th>مرحله</th><th>صحیح</th><th>درصد</th><th>⚡ سرعت</th><th>⏱ میانگین زمان</th><th>تاریخ</th></tr></thead>
+          <tbody id="resBody"></tbody>
+        </table>
+      </div>
+      <p class="teacher-note">🔒 این صفحه فقط با رمز معلم باز می‌شود.</p>
+      <div class="res-btns">
+        <button id="btnBack" class="big-btn teal">بازگشت ➡</button>
+        <button id="btnClearRes" class="big-btn coral">🗑 پاک کردن همه</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="overlay-pin hidden" id="pinOverlay">
+  <div class="pin-card" id="pinCard">
+    <div class="pin-icon">🔒</div>
+    <h3>ورود معلم</h3>
+    <p>برای دیدن کارنامه‌ها رمز معلم را وارد کنید:</p>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="12" placeholder="••••">
+    <div class="pin-btns">
+      <button id="pinOk" class="big-btn green">ورود</button>
+      <button id="pinCancel" class="big-btn coral">انصراف</button>
+    </div>
+    <p id="pinErr" class="pin-err hidden">رمز اشتباه است! ❌</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* =====================================================
+   تنظیمات معلم — قبل از انتشار این‌ها را پر کنید:
+   1) رمز ورود به کارنامه‌ها: */
+const TEACHER_PIN='1234';
+/* 2) ارسال خودکار نتیجه به تلگرام شما (اختیاری ولی توصیه‌شده):
+      اگر پر کنید، نتیجهٔ هر دانش‌آموز از هر گوشی به تلگرام شما می‌آید. */
+const TG_TOKEN='';
+const TG_CHAT='';
+/* 3) زمان هر سوال (ثانیه): */
+const QTIME=10;
+/* ===================================================== */
+
+const $=s=>document.querySelector(s);
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const faTime=x=>fa(String(x).replace('.','٫'));
+const rnd=n=>Math.floor(Math.random()*n);
+const ri=(a,b)=>a+rnd(b-a+1);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const frac=(n,d)=>`<span class="frac"><b>${fa(n)}</b><i>${fa(d)}</i></span>`;
+
+let AC=null,muted=false;
+function tone(f,d=.12,type='sine',vol=.18,delay=0){
+  if(muted)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();
+    o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.03);
+  }catch(e){}
+}
+const sndClick=()=>tone(520,.07,'sine',.14);
+const sndGood=()=>{tone(660,.12,'triangle',.2);tone(880,.16,'triangle',.2,.1);};
+const sndBad=()=>tone(150,.2,'square',.07);
+const sndTick=()=>tone(950,.05,'sine',.1);
+const sndWin=()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.22,'triangle',.2,i*.13));
+
+const KEY='kasrResultsV1';
+function loadResults(){try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return[];}}
+function saveResult(r){const a=loadResults();a.push(r);try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}}
+function sendToTeacher(text){
+  if(!TG_TOKEN||!TG_CHAT)return;
+  try{
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:TG_CHAT,text})
+    }).catch(()=>{});
+  }catch(e){}
+}
+
+let student='',stage=1,qIndex=0,score=0,speedScore=0,qTimes=[],current=null,answered=false;
+let prevScreen='scr-login',curScreen='scr-login',teacherUnlocked=false;
+const TOTAL=12;
+
+/* ---------- تایمر ---------- */
+let timerInt=null,qStart=0,pausedRem=null,questionActive=false,lastWhole=QTIME;
+function startTimer(){
+  stopTimer();
+  questionActive=true;pausedRem=null;lastWhole=QTIME+1;
+  qStart=performance.now();
+  timerInt=setInterval(tick,100);tick();
+}
+function tick(){
+  const rem=QTIME-(performance.now()-qStart)/1000;
+  paintTimer(Math.max(0,rem));
+  if(rem<=0){stopTimer();onTimeout();}
+}
+function paintTimer(rem){
+  const whole=Math.ceil(rem);
+  if(whole!==lastWhole){
+    lastWhole=whole;
+    $('#timeNo').textContent=fa(whole);
+    if(whole<=3&&whole>0)sndTick();
+  }
+  $('#tfill').style.width=(rem/QTIME*100)+'%';
+  $('#tfill').className=rem>6?'g':rem>3?'o':'r';
+  $('#timeChip').classList.toggle('danger',rem<=3);
+}
+function stopTimer(){if(timerInt){clearInterval(timerInt);timerInt=null;}}
+function elapsed(){return Math.min(QTIME,(performance.now()-qStart)/1000);}
+function pauseTimer(){if(timerInt){pausedRem=QTIME-elapsed();stopTimer();}}
+function resumeTimer(){
+  if(pausedRem!=null&&questionActive&&!answered){
+    qStart=performance.now()-(QTIME-pausedRem)*1000;
+    pausedRem=null;lastWhole=-1;
+    timerInt=setInterval(tick,100);tick();
+  }
+}
+document.addEventListener('visibilitychange',()=>{
+  if(curScreen!=='scr-game')return;
+  if(document.hidden)pauseTimer();else resumeTimer();
+});
+
+let toastT=null;
+function toast(msg){
+  const t=$('#toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  $('#'+id).classList.remove('hidden');
+  curScreen=id;
+}
+
+/* ---------- شکل‌ها ---------- */
+function pieSVG(n,d,size=130){
+  const cx=60,cy=60,r=54;let paths='';
+  for(let i=0;i<d;i++){
+    const a0=(i*360/d-90)*Math.PI/180,a1=((i+1)*360/d-90)*Math.PI/180;
+    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const large=(360/d)>180?1:0;
+    paths+=`<path d="M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z" fill="${i<n?'#FF8A5C':'#fff'}" stroke="#5B3A1E" stroke-width="2"/>`;
+  }
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">${paths}<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#5B3A1E" stroke-width="3"/></svg>`;
+}
+function barSVG(n,d,color,w=150){
+  const h=34,cw=w/d;let cells='';
+  for(let i=0;i<d;i++)cells+=`<rect x="${(i*cw).toFixed(1)}" y="0" width="${cw.toFixed(1)}" height="${h}" fill="${i<n?color:'#fff'}" stroke="#445" stroke-width="2"/>`;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${cells}</svg>`;
+}
+function numlineSVG(k,d){
+  const W=560,H=95,x0=30,x1=W-30,y=48;let ticks='';
+  for(let i=0;i<=d;i++){const x=x0+(x1-x0)*i/d;ticks+=`<line x1="${x.toFixed(1)}" y1="${y-9}" x2="${x.toFixed(1)}" y2="${y+9}" stroke="#445" stroke-width="2.5"/>`;}
+  const xs=x0+(x1-x0)*k/d;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:560px;height:auto">
+    <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#445" stroke-width="3.5"/>
+    ${ticks}
+    <text x="${x0}" y="${y+32}" text-anchor="middle" font-size="20" font-weight="bold" fill="#5B3A1E">0</text>
+    <text x="${x1}" y="${y+32}" text-anchor="middle" font-size="20" font-weight="bold" fill="#5B3A1E">1</text>
+    <text x="${xs.toFixed(1)}" y="${y-18}" text-anchor="middle" font-size="30">⭐</text>
+  </svg>`;
+}
+
+/* ---------- ساخت سوال‌ها ---------- */
+function pickDummies(correctHTML,pool){
+  const out=[];
+  for(const p of shuffle(pool)){
+    if(out.length>=2)break;
+    if(p!==correctHTML&&!out.includes(p))out.push(p);
+  }
+  return out;
+}
+function genQuestion(st){
+  let pool=['addsub','shade','compare'];
+  if(st>=2)pool.push('equiv');
+  if(st>=3)pool.push('numline');
+  const type=pool[rnd(pool.length)];
+  const maxD=Math.min(9+st*2,12);
+
+  if(type==='addsub'){
+    const d=ri(3,maxD),plus=Math.random()<.5;
+    let a,b,n;
+    if(plus){a=ri(1,d-1);b=ri(1,d-a);n=a+b;}
+    else{a=ri(2,d);b=ri(1,a-1);n=a-b;}
+    const correct=frac(n,d);
+    const dums=pickDummies(correct,[frac(n,2*d),frac(n+1,d),frac(Math.max(0,n-1),d),frac(n,d+1)]);
+    return build('حاصل عبارت زیر چند می‌شود؟ 🤔',
+      `${frac(a,d)} <span class="op">${plus?'+':'−'}</span> ${frac(b,d)} <span class="op">=</span> ❓`,
+      correct,dums);
+  }
+  if(type==='shade'){
+    const ds=[2,3,4,5,6,8,10,12],d=ds[rnd(ds.length)],n=ri(1,d-1);
+    const correct=frac(n,d);
+    const dums=pickDummies(correct,[frac(d-n,d),frac(n+1,d),frac(n,d+2),frac(d,n)]);
+    return build('چه کسری از شکل رنگ شده است؟ 🎨',pieSVG(n,d),correct,dums);
+  }
+  if(type==='equiv'){
+    const a=ri(1,6),b=ri(2,9),k=ri(2,Math.min(3+st,6));
+    const missTop=Math.random()<.5;
+    const ans=missTop?a*k:b*k;
+    const visual=`${frac(a,b)} <span class="op">=</span> ${missTop?frac('❓',b*k):frac(a*k,'❓')}`;
+    const correct=`<span>${fa(ans)}</span>`;
+    const dums=pickDummies(correct,[ans+1,ans-1,ans+k,ans-k,ans+2].filter(v=>v>0&&v!==ans).map(v=>`<span>${fa(v)}</span>`));
+    return build('عدد جای خالی (❓) چند است تا دو کسر برابر باشند؟ ⚖️',visual,correct,dums);
+  }
+  if(type==='compare'){
+    let f1,f2,v1,v2,b1,b2;
+    if(st>=3&&Math.random()<.4){
+      const n=ri(1,5),d1=ri(2,9),d2=ri(2,9);
+      f1=frac(n,d1);f2=frac(n,d2);v1=n/d2;v2=n/d1;
+      b1=barSVG(n,d1,'#7FB2E5');b2=barSVG(n,d2,'#8FD08A');
+    }else{
+      const d=ri(3,maxD),n1=ri(1,d),n2=ri(1,d);
+      f1=frac(n1,d);f2=frac(n2,d);v1=n1;v2=n2;
+      b1=barSVG(n1,d,'#7FB2E5');b2=barSVG(n2,d,'#8FD08A');
+    }
+    const correct=v1===v2?'=':(v1>v2?'>':'<');
+    const visual=`<div class="cmp">
+      <div class="cmp-side">${b1}${f1}</div>
+      <div class="cmp-mid">❓</div>
+      <div class="cmp-side">${b2}${f2}</div></div>`;
+    const opts=shuffle(['<','=','>']);
+    return {label:'کدام علامت بین دو کسر درست است؟ ⚖️',visual,
+      options:opts.map(s=>({html:`<span dir="ltr">${s}</span>`,ok:s===correct}))};
+  }
+  const d=ri(3,maxD),k=ri(1,d-1);
+  const correct=frac(k,d);
+  const dums=pickDummies(correct,[frac(k+1,d),frac(Math.max(1,k-1),d),frac(d-k,d),frac(k,d+1)]);
+  return build('ستاره روی کدام کسر ایستاده است؟ ⭐',numlineSVG(k,d),correct,dums);
+}
+function build(label,visual,correctHTML,dummyHTMLs){
+  const opts=[{html:correctHTML,ok:true}];
+  dummyHTMLs.forEach(h=>opts.push({html:h,ok:false}));
+  while(opts.length<3)opts.push({html:frac(ri(1,9),ri(2,12)),ok:false});
+  return {label,visual,options:shuffle(opts)};
+}
+
+/* ---------- جریان بازی ---------- */
+function startGame(name){
+  student=name;stage=1;
+  $('#studentChip').textContent='👤 '+name;
+  $('#studentChip').classList.remove('hidden');
+  $('#btnExit').classList.remove('hidden');
+  startStage();
+}
+function startStage(){
+  qIndex=0;score=0;speedScore=0;qTimes=[];
+  $('#dots').innerHTML=Array.from({length:TOTAL},()=>'<span class="dot"></span>').join('');
+  $('#stageNo').textContent=fa(stage);
+  $('#scoreNo').textContent=fa(0);
+  $('#speedNo').textContent=fa(0);
+  showScreen('scr-game');
+  toast('⏱ برای هر سوال ۱۰ ثانیه فرصت داری! سریع‌تر = ⚡ امتیاز بیشتر');
+  newQuestion();
+}
+function newQuestion(){
+  answered=false;
+  current=genQuestion(stage);
+  $('#qNo').textContent=fa(qIndex+1);
+  $('#qLabel').textContent=current.label;
+  $('#visual').innerHTML=current.visual;
+  $('#feedback').classList.add('hidden');
+  $('#btnNext').classList.add('hidden');
+  const box=$('#opts');box.innerHTML='';
+  current.options.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';b.innerHTML=o.html;
+    b.addEventListener('click',()=>onAnswer(i,b));
+    box.appendChild(b);
+  });
+  markDots();startTimer();
+}
+function markDots(){
+  const dots=$('#dots').children;
+  for(let i=0;i<dots.length;i++)dots[i].classList.toggle('cur',i===qIndex&&!answered);
+}
+function onAnswer(i,btn){
+  if(answered)return;
+  const used=elapsed();
+  stopTimer();questionActive=false;pausedRem=null;
+  answered=true;
+  const remain=QTIME-used;
+  qTimes.push(used);
+  const correct=current.options.findIndex(o=>o.ok);
+  const btns=$('#opts').children;
+  for(const b of btns)b.disabled=true;
+  const fb=$('#feedback');fb.classList.remove('hidden','good','bad');
+  if(i===correct){
+    score++;
+    const gain=Math.max(0,Math.round(remain));
+    speedScore+=gain;
+    $('#speedNo').textContent=fa(speedScore);
+    btn.classList.add('correct');
+    $('#dots').children[qIndex].classList.add('ok');
+    fb.classList.add('good');
+    fb.innerHTML=`🎉 آفرین ${student}! درست جواب دادی! (زمان: ${faTime(used.toFixed(1))} ثانیه)<br>⚡ امتیاز سرعت: +${fa(gain)}`;
+    sndGood();
+  }else{
+    btn.classList.add('wrong');
+    btns[correct].classList.add('correct');
+    $('#dots').children[qIndex].classList.add('bad');
+    fb.classList.add('bad');
+    fb.innerHTML=`😅 اشکالی نداره! پاسخ درست با رنگ سبز مشخص شد.`;
+    sndBad();
+  }
+  $('#scoreNo').textContent=fa(score);
+  const nb=$('#btnNext');
+  nb.textContent=qIndex===TOTAL-1?'مشاهده نتیجه 🏁':'سوال بعدی ⬅';
+  nb.classList.remove('hidden');
+  markDots();
+}
+function onTimeout(){
+  if(answered)return;
+  answered=true;questionActive=false;
+  qTimes.push(QTIME);
+  const correct=current.options.findIndex(o=>o.ok);
+  const btns=$('#opts').children;
+  for(const b of btns)b.disabled=true;
+  btns[correct].classList.add('correct');
+  $('#dots').children[qIndex].classList.add('bad');
+  const fb=$('#feedback');fb.classList.remove('hidden','good','bad');
+  fb.classList.add('bad');
+  fb.innerHTML=`⏰ زمان تمام شد! پاسخ درست با رنگ سبز مشخص شد.`;
+  sndBad();
+  const nb=$('#btnNext');
+  nb.textContent=qIndex===TOTAL-1?'مشاهده نتیجه 🏁':'سوال بعدی ⬅';
+  nb.classList.remove('hidden');
+  markDots();
+}
+$('#btnNext').addEventListener('click',()=>{
+  sndClick();
+  qIndex++;
+  if(qIndex>=TOTAL)finishStage();else newQuestion();
+});
+function finishStage(){
+  stopTimer();questionActive=false;
+  const percent=Math.round(score/TOTAL*100);
+  const starsN=score>=10?3:score>=7?2:score>=4?1:0;
+  const avg=qTimes.length?(qTimes.reduce((a,b)=>a+b,0)/qTimes.length):QTIME;
+  const avgR=Math.round(avg*10)/10;
+  saveResult({name:student,stage,score,total:TOTAL,percent,speed:speedScore,avg:avgR,date:new Date().toLocaleString('fa-IR')});
+  sendToTeacher(`📊 نتیجهٔ بازی کسرها\n👤 نام: ${student}\n🎯 مرحله: ${stage}\n✅ پاسخ صحیح: ${score} از ${TOTAL} (${percent}٪)\n⚡ امتیاز سرعت: ${speedScore}\n⏱ میانگین زمان پاسخ: ${avgR} ثانیه`);
+  $('#stars').textContent='⭐'.repeat(starsN)+'☆'.repeat(3-starsN);
+  $('#resTitle').textContent=starsN===3?'فوق‌العاده بودی! 🏆':starsN===2?'خیلی خوب بود! 🎉':starsN===1?'خوب بود! ادامه بده 💪':'تمرین بیشتر = قوی‌تر! 🌱';
+  $('#resDetail').innerHTML=
+    `${student} عزیز، در <b>مرحله ${fa(stage)}</b> به <b>${fa(score)}</b> پاسخ درست از ${fa(TOTAL)} رسیدی (<b>${fa(percent)}٪</b>).<br>`+
+    `⚡ امتیاز سرعت: <b>${fa(speedScore)}</b> — ⏱ میانگین زمان پاسخ: <b>${faTime(avgR)} ثانیه</b><br>نتیجه‌ات برای معلم ثبت شد! 📊`;
+  showScreen('scr-result');
+  if(starsN>=1){confetti();sndWin();}else sndClick();
+}
+$('#btnNextStage').addEventListener('click',()=>{sndClick();stage++;startStage();});
+$('#btnRetry').addEventListener('click',()=>{sndClick();startStage();});
+
+function confetti(){
+  const colors=['#FF6B6B','#57B7EC','#FFD93D','#2ECC71','#A06CD5','#FF8A5C'];
+  for(let i=0;i<80;i++){
+    const c=document.createElement('i');c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=colors[i%6];
+    c.style.width=(8+Math.random()*8)+'px';
+    c.style.height=(10+Math.random()*10)+'px';
+    if(Math.random()<.4)c.style.borderRadius='50%';
+    c.style.animationDuration=(2.4+Math.random()*1.8)+'s';
+    c.style.animationDelay=(Math.random()*.5)+'s';
+    document.body.appendChild(c);setTimeout(()=>c.remove(),4800);
+  }
+}
+
+/* ---------- دسترسی معلم ---------- */
+function requestResults(){
+  prevScreen=curScreen;
+  if(curScreen==='scr-game'&&!answered)pauseTimer();
+  if(teacherUnlocked){openResults();}
+  else{
+    $('#pinOverlay').classList.remove('hidden');
+    $('#pinErr').classList.add('hidden');
+    $('#pinInput').value='';
+    setTimeout(()=>$('#pinInput').focus(),120);
+  }
+}
+function openResults(){renderResults();showScreen('scr-results');sndClick();}
+$('#pinOk').addEventListener('click',checkPin);
+$('#pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin();});
+$('#pinCancel').addEventListener('click',()=>{
+  $('#pinOverlay').classList.add('hidden');
+  if(curScreen==='scr-game')resumeTimer();
+});
+function checkPin(){
+  if($('#pinInput').value===TEACHER_PIN){
+    teacherUnlocked=true;
+    $('#pinOverlay').classList.add('hidden');
+    openResults();sndGood();
+  }else{
+    $('#pinErr').classList.remove('hidden');
+    const c=$('#pinCard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');
+    sndBad();
+  }
+}
+$('#btnResults').addEventListener('click',requestResults);
+let logoTaps=0,logoTimer=null;
+$('#logo').addEventListener('click',()=>{
+  logoTaps++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoTaps=0,1500);
+  if(logoTaps>=5){logoTaps=0;requestResults();}
+});
+document.addEventListener('keydown',e=>{
+  if(e.altKey&&e.code==='KeyT'){e.preventDefault();requestResults();}
+});
+
+function renderResults(){
+  const a=loadResults();
+  $('#sumLine').textContent=a.length?`تعداد تلاش‌های ثبت‌شده: ${fa(a.length)}`:'هنوز نتیجه‌ای ثبت نشده است.';
+  const body=$('#resBody');
+  if(!a.length){body.innerHTML='<tr><td colspan="7" class="empty-row">هنوز کسی بازی نکرده! 🎈</td></tr>';return;}
+  body.innerHTML=a.slice().reverse().map(r=>`
+    <tr>
+      <td class="name">${escapeHtml(r.name)}</td>
+      <td>مرحله ${fa(r.stage)}</td>
+      <td>${fa(r.score)} از ${fa(r.total)}</td>
+      <td class="${r.percent>=50?'pass':'fail'}">${fa(r.percent)}٪</td>
+      <td>${r.speed!=null?'⚡ '+fa(r.speed):'—'}</td>
+      <td>${r.avg!=null?faTime(r.avg)+' ث':'—'}</td>
+      <td>${r.date}</td>
+    </tr>`).join('');
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('#btnBack').addEventListener('click',()=>{
+  sndClick();
+  showScreen(prevScreen==='scr-results'?'scr-login':prevScreen);
+  if(curScreen==='scr-game')resumeTimer();
+});
+$('#btnClearRes').addEventListener('click',()=>{
+  if(confirm('همهٔ کارنامه‌ها پاک شوند؟')){
+    try{localStorage.removeItem(KEY);}catch(e){}
+    renderResults();
+  }
+});
+
+$('#btnStart').addEventListener('click',tryStart);
+$('#inpName').addEventListener('keydown',e=>{if(e.key==='Enter')tryStart();});
+function tryStart(){
+  const name=$('#inpName').value.trim();
+  if(!name){$('#inpName').focus();$('#inpName').style.borderColor='#FF6B6B';setTimeout(()=>$('#inpName').style.borderColor='',900);return;}
+  sndGood();startGame(name);
+}
+$('#btnExit').addEventListener('click',()=>{
+  if(confirm('از بازی خارج می‌شوی؟ پیشرفت این مرحله ذخیره نمی‌شود.')){
+    stopTimer();questionActive=false;
+    showScreen('scr-login');
+    $('#studentChip').classList.add('hidden');
+    $('#btnExit').classList.add('hidden');
+  }
+});
+$('#btnSound').addEventListener('click',e=>{
+  muted=!muted;e.currentTarget.textContent=muted?'🔇':'🔊';
+});
+document.addEventListener('pointerdown',function init(){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+  document.removeEventListener('pointerdown',init);
+});
+</script>
+</body>
+</html>
